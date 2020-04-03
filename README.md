@@ -1,0 +1,3 @@
+# whynote
+
+whyes, notes cli
