@@ -5,8 +5,7 @@ const dataworker = require('./work_with_data');
 
 class Manager {
     constructor() {
-        this.current_task_list = [];
-
+        // Color Palette
         this.output_colors = {
             important: {
                 text: {r: 250, g: 250, b: 250},
@@ -23,7 +22,8 @@ class Manager {
             primary: {r: 211, g: 201, b:237}
         };
 
-        let take_data_file_dir = () => {
+        // Get correct file path ./data/data_file.json
+        let take_data_file_dir = () => { 
             let data_file_dir_str = ''
             let data_file_dir_folders = __dirname.split('\\').slice(0, __dirname.split('\\').length - 1);
             data_file_dir_str = (data_file_dir_folders[0]+'\\');
@@ -31,26 +31,28 @@ class Manager {
             data_file_dir_str = data_file_dir_str + data_file_dir_folders.join('\\') + '\\data\\data_file.json';
             return data_file_dir_str;
         }
-        this.data_file_dir = take_data_file_dir();
-        
-
+        this.data_file_dir = take_data_file_dir();  
     }
 
     print_blank_line() {
+        /* Just Blank Line */
         console.log('-----------------')
     }
 
     return_error(text) {
+        /* Return Error Template */
         this.print_blank_line();
         console.log(chalk.redBright(`Error! ${text}`));
         this.print_blank_line();
     }
 
     add_task(task) {
+        /* Add Task to Data File */
         dataworker.add_task(this.data_file_dir, task);
     }
 
     print_task(id, task, color) {
+        /* Print Task With Correct Selection */
         let {r, g, b} = this.output_colors.primary;
         id++; 
         if (color.bg != null)
@@ -67,9 +69,10 @@ class Manager {
     }
 
     get_task_list(sort_type) {
+        /* Output all Tasks with Choiced Sort Type */
         const task_list = dataworker.get_tasks(this.data_file_dir, sort_type);
         let id = 0;
-        
+
         console.log();
         this.print_blank_line();
         while (id < task_list.length) {

@@ -32,7 +32,6 @@ commander
     .description('Get list of tasks.')
     .action((cmd) => {
         // Output list of tasks with selected type of sort
-            // sort_type can be priority or time or all
         if (cmd.sort)
             if (cmd.sort == 'priority' ||  cmd.sort == 'date')
                 manager.get_task_list(cmd.sort)
@@ -53,20 +52,24 @@ commander
             {type: 'input', name: 'task_priority', message: 'Task priority: '}
         ]).then((options) => {
             // Add task with <name> and <priority>
+
+            // Extraction task text and priority
             let task_data = [];
             for (prop in options) {
                 task_data.push(options[prop]);
             }
-
             let task_text = task_data[0];
             let task_priority = task_data[1];
+
             if (task_priority > 0 && task_priority < 4) {
+                // Create task dict
                 let task_date = Date.now();
                 let task = {
                     'priority': task_priority,
                     'text': task_text,
                     'date': task_date
                 }
+                // Adding task to task list
                 manager.add_task(task);
             } else {
                 manager.return_error('Invalid task priority!');
