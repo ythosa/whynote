@@ -1,30 +1,29 @@
 {
-    "name": "whynote",
-    "preferGlobal": true,
-    "bin": {
-      "note": "app.js"
-    },
-    "dependencies": {
-      "commander": "^5.0.0",
-      "inquirer": "^7.1.0",
-      "chalk": "^4.0.0"
-    },
-    "description": "Command line interface, which implements a notepad task manager.",
-    "version": "1.0.0",
-    "main": "app.js",
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/Ythosa/whynote.git"
-    },
-    "keywords": [
-      "task",
-      "manager"
-    ],
-    "author": "Ythosa",
-    "license": "MIT",
-    "bugs": {
-      "url": "https://github.com/Ythosa/whynote/issues"
-    },
-    "homepage": "https://github.com/Ythosa/whynote#readme"
+  "name": "whynote",
+  "preferGlobal": true,
+  "bin": {
+    "note": "app.js"
+  },
+  "dependencies": {
+    "commander": "^5.0.0",
+    "inquirer": "^7.1.0",
+    "chalk": "^4.0.0"
+  },
+  "description": "Command line interface, which implements a notepad task manager.",
+  "version": "1.0.0",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ythosa/whynote.git"
+  },
+  "keywords": [
+    "task",
+    "manager"
+  ],
+  "author": "Ythosa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ythosa/whynote/issues"
+  },
+  "homepage": "https://github.com/Ythosa/whynote#readme"
 }
-  

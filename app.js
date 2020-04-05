@@ -9,16 +9,21 @@
 
 /* npm link --force   -   adding module to console */    
 
-// Importing dependencies
+    /* Importing dependencies */
 const commander = require('commander')
 const {prompt} = require('inquirer')
 const chalk = require('chalk')
+const Manager = require('./libs/manager')
 
 // Set commander version and description
 // note --version|-V
 // note --help|-h
 commander.version('v1.0.0').description('Command line interface, which implements a notepad task manager.')
 
+// Create task manager
+const manager = new Manager()
+
+    /* Commander Commands */ 
 // note list [options]  -  get list of notes
 commander
     .command('list')
@@ -28,6 +33,7 @@ commander
     .action((cmd) => {
         // Output list of tasks with selected type of sort
             // sort_type can be priority or time or all
+        manager.get_task_list();
     })
 
 // note add - adding some task 
@@ -41,7 +47,24 @@ commander
             {type: 'input', name: 'task_priority', message: 'Task priority: '}
         ]).then((options) => {
             // Add task with <name> and <priority>
-                // priority [1..3] create checking
+            let task_data = [];
+            for (prop in options) {
+                task_data.push(options[prop]);
+            }
+
+            let task_text = task_data[0];
+            let task_priority = task_data[1];
+            if (task_priority > 0 && task_priority < 4) {
+                let task_date = Date.now();
+                let task = {
+                    'priority': task_priority,
+                    'text': task_text,
+                    'date': task_date
+                }
+                manager.add_task(task);
+            } else {
+                manager.return_error('Invalid task priority!');
+            }
         })
     })
 
