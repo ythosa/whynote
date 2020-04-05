@@ -33,7 +33,13 @@ commander
     .action((cmd) => {
         // Output list of tasks with selected type of sort
             // sort_type can be priority or time or all
-        manager.get_task_list();
+        if (cmd.sort)
+            if (cmd.sort == 'priority' ||  cmd.sort == 'date')
+                manager.get_task_list(cmd.sort)
+            else 
+                manager.return_error('Invalid type of sort.')
+        else
+            manager.get_task_list('priority')
     })
 
 // note add - adding some task 

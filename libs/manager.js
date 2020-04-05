@@ -7,7 +7,21 @@ class Manager {
     constructor() {
         this.current_task_list = [];
 
-        this.output_colors = ['cyan', 'magenta', 'yellow'];
+        this.output_colors = {
+            important: {
+                text: {r: 250, g: 250, b: 250},
+                bg: {r: 141, g: 127, b: 210}
+            },
+            average: {
+                text: {r: 93, g: 85, b: 190},
+                bg: {r: 250, g: 250, b: 250}
+            },
+            inessental: {
+                text: {r: 211, g: 201, b: 237},
+                bg: null
+            },
+            primary: {r: 211, g: 201, b:237}
+        };
 
         let take_data_file_dir = () => {
             let data_file_dir_str = ''
@@ -23,7 +37,7 @@ class Manager {
     }
 
     print_blank_line() {
-        console.log('----------')
+        console.log('-----------------')
     }
 
     return_error(text) {
@@ -36,13 +50,39 @@ class Manager {
         dataworker.add_task(this.data_file_dir, task);
     }
 
-    get_task_list() {
-        const task_list = dataworker.get_tasks(this.data_file_dir);
-        let current_color_index = 0;
-        for (let task_id in task_list) {
-            console.log(chalk[this.output_colors[current_color_index]](task_id + ' ' + task_list[task_id]))
-            current_color_index++;
+    print_task(id, task, color) {
+        let {r, g, b} = this.output_colors.primary;
+        id++; 
+        if (color.bg != null)
+            console.log(
+                '| ' + chalk.rgb(r, g, b)(id) +
+                ' | ' + chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b)
+                .rgb(color.text.r, color.text.g, color.text.b)(task) + '. '
+            )
+        else 
+            console.log(
+                '| ' + chalk.rgb(r, g, b)(id) +
+                ' | ' + chalk.rgb(color.text.r, color.text.g, color.text.b)(task) + '. '
+            )
+    }
+
+    get_task_list(sort_type) {
+        const task_list = dataworker.get_tasks(this.data_file_dir, sort_type);
+        let id = 0;
+        
+        console.log();
+        this.print_blank_line();
+        while (id < task_list.length) {
+            let task_priority = task_list[id]['priority'];
+            if (task_priority == 3)
+                this.print_task(id, task_list[id].text, this.output_colors['important'])
+            else if (task_priority == 2) 
+                this.print_task(id, task_list[id].text, this.output_colors['average'])
+            else 
+                this.print_task(id, task_list[id].text, this.output_colors['inessental'])
+            id++;
         }
+        this.print_blank_line();
     }
     
 }
