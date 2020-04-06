@@ -22,7 +22,7 @@
 
 # Description
 -    Command line task manager;
--    `whynote` is easy way to mark tasks, which need complete;
+-    `whynote` is easy way to mark tasks, which need to be completed;
 -    It is easy to install and easy to use;
 -    It has great functionality.
 
