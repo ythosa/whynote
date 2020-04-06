@@ -4,8 +4,13 @@ const chalk = require('chalk');
 const dataworker = require('./work_with_data');
 
 class Manager {
+    
     constructor() {
+        // Valid priority of task
+        this.valid_priority_num = /^[1|2|3]$/;
+
         // Color Palette
+        this.output_colors_name = ['inessental', 'average', 'important',];
         this.output_colors = {
             important: {
                 text: {r: 250, g: 250, b: 250},
@@ -36,19 +41,38 @@ class Manager {
 
     print_blank_line() {
         /* Just Blank Line */
-        console.log('-----------------')
+        console.log('----------------')
     }
 
     return_error(text) {
         /* Return Error Template */
+        console.log();
         this.print_blank_line();
-        console.log(chalk.redBright(`Error! ${text}`));
+        console.log(chalk.redBright(`   Error! ${text}`));
+        this.print_blank_line();
+    }
+
+    return_warning(text) {
+        /* Return Warning Template */
+        console.log();
+        this.print_blank_line();
+        console.log(chalk.yellowBright(`    Warning! ${text}`));
+        this.print_blank_line();
+    }
+
+    return_success() {
+        /* Return Seccess of Operation */
+        console.log();
+        this.print_blank_line();
+        console.log(chalk.greenBright(`    Success!`));
         this.print_blank_line();
     }
 
     add_task(task) {
         /* Add Task to Data File */
         dataworker.add_task(this.data_file_dir, task);
+
+        this.return_success();
     }
 
     print_task(id, task, color) {
@@ -59,12 +83,12 @@ class Manager {
             console.log(
                 '| ' + chalk.rgb(r, g, b)(id) +
                 ' | ' + chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b)
-                .rgb(color.text.r, color.text.g, color.text.b)(task) + '. '
+                .rgb(color.text.r, color.text.g, color.text.b)(' ' + task + ' ') + '.'
             )
         else 
             console.log(
                 '| ' + chalk.rgb(r, g, b)(id) +
-                ' | ' + chalk.rgb(color.text.r, color.text.g, color.text.b)(task) + '. '
+                ' | ' + chalk.rgb(color.text.r, color.text.g, color.text.b)(' '+task+'.')
             )
     }
 
@@ -75,19 +99,53 @@ class Manager {
 
         console.log();
         this.print_blank_line();
-        while (id < task_list.length) {
-            let task_priority = task_list[id]['priority'];
-            if (task_priority == 3)
-                this.print_task(id, task_list[id].text, this.output_colors['important'])
-            else if (task_priority == 2) 
-                this.print_task(id, task_list[id].text, this.output_colors['average'])
-            else 
-                this.print_task(id, task_list[id].text, this.output_colors['inessental'])
-            id++;
-        }
+        if (task_list.length)
+            while (id < task_list.length) {
+                let task_priority = task_list[id]['priority'];
+                if (task_priority == 3)
+                    this.print_task(id, task_list[id].text, this.output_colors['important'])
+                else if (task_priority == 2) 
+                    this.print_task(id, task_list[id].text, this.output_colors['average'])
+                else 
+                    this.print_task(id, task_list[id].text, this.output_colors['inessental'])
+                id++;
+            }
+        else 
+            console.log(chalk.yellowBright('    Task list is clear.'))
         this.print_blank_line();
     }
-    
+
+    update_task(id, task_text, task_priority) {
+        /* Updating Task with Id */
+        let task_list = dataworker.get_tasks(this.data_file_dir, 'last');
+        id--;
+        if (task_priority >= 0 && task_priority <= 3) {
+            task_list[id].priority = task_priority;
+            task_list[id].text = task_text;
+            dataworker.update_task_list(this.data_file_dir, task_list);
+
+            this.return_success()
+        } else {
+            this.return_error('Invalid task priority!');
+        }
+    }
+
+    remove_task(id) {
+        /* Remove Task with Id */
+        let task_list = dataworker.get_tasks(this.data_file_dir, 'last');
+        id--;
+        if (id >= 0 && id < task_list.length) {
+            task_list = [
+                ...task_list.slice(0, id),
+                ...task_list.slice(++id)
+            ]
+            dataworker.update_task_list(this.data_file_dir, task_list);
+
+            this.return_success();
+        } else {
+            this.return_error('There is no task with this id!')
+        }        
+    }
 }
 
 module.exports = Manager

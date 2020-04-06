@@ -8,14 +8,17 @@ class DataWorker {
         /* Get task list from json file */
         let task_list = fs.readFileSync(`${data_dir}`, "utf8");
         task_list = JSON.parse(task_list);
-
-        // Sorting getted task list
-        if (sort_type == 'date')
-            task_list = task_list.sort((t1, t2) => t1['date'] - t2['date'])
-        else    
-            task_list = task_list.sort((t1, t2) => t2['priority'] - t1['priority']); 
-        // Update data file
-        fs.writeFileSync(data_dir, JSON.stringify(task_list, null, '   '), "utf8");
+        
+        // If we need sort list
+        if (sort_type != 'last') {
+            // Sorting getted task list
+            if (sort_type == 'date')
+                task_list = task_list.sort((t1, t2) => t1['date'] - t2['date'])
+            else    
+                task_list = task_list.sort((t1, t2) => t2['priority'] - t1['priority']); 
+            // Update data file
+            this.update_task_list(data_dir, task_list)
+        }
 
         return task_list
     }
@@ -28,6 +31,11 @@ class DataWorker {
             ...task_list,
             task
         ]
+        task_list = JSON.stringify(task_list, null, '   ');
+        fs.writeFileSync(data_dir, task_list, "utf8");
+    }
+
+    static update_task_list(data_dir, task_list) {
         task_list = JSON.stringify(task_list, null, '   ');
         fs.writeFileSync(data_dir, task_list, "utf8");
     }

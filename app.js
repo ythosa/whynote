@@ -12,8 +12,8 @@
     /* Importing dependencies */
 const commander = require('commander')
 const {prompt} = require('inquirer')
-const chalk = require('chalk')
 const Manager = require('./libs/manager')
+const dataworker = require('./libs/work_with_data')
 
 // Set commander version and description
 // note --version|-V
@@ -47,57 +47,77 @@ commander
     .alias('a')
     .description('Adding task.')
     .action((cmd) => {
-        prompt([
-            {type: 'input', name: 'task_text', message: 'Task text: '},
-            {type: 'input', name: 'task_priority', message: 'Task priority: '}
-        ]).then((options) => {
-            // Add task with <name> and <priority>
+        let task_list_length = dataworker.get_tasks(manager.data_file_dir).length;
+        if (task_list_length < 9)
+            prompt([
+                {type: 'input', name: 'task_text', message: 'Task text: '},
+                {type: 'input', name: 'task_priority', message: 'Task priority: '}
+            ]).then((options) => {
+                // Add task with <name> and <priority>
 
-            // Extraction task text and priority
-            let task_data = [];
-            for (prop in options) {
-                task_data.push(options[prop]);
-            }
-            let task_text = task_data[0];
-            let task_priority = task_data[1];
-
-            if (task_priority > 0 && task_priority < 4) {
-                // Create task dict
-                let task_date = Date.now();
-                let task = {
-                    'priority': task_priority,
-                    'text': task_text,
-                    'date': task_date
+                // Extraction task text and priority
+                let task_data = [];
+                for (prop in options) {
+                    task_data.push(options[prop]);
                 }
-                // Adding task to task list
-                manager.add_task(task);
-            } else {
-                manager.return_error('Invalid task priority!');
-            }
-        })
+                let task_text = task_data[0];
+                let task_priority = task_data[1];
+
+                if ((manager.valid_priority_num.exec(task_priority)) || (manager.output_colors_name.indexOf(task_priority)) != -1) {
+                    if (!manager.valid_priority_num.exec(task_priority)) 
+                        task_priority = manager.output_colors_name.indexOf(task_priority) + 1;
+
+                    // Create task dict
+                    let task_date = Date.now();
+                    let task = {
+                        'priority': task_priority,
+                        'text': task_text,
+                        'date': task_date
+                    }
+                    // Adding task to task list
+                    manager.add_task(task);
+                } else {
+                    manager.return_error('Invalid task priority!');
+                }
+            })
+        else
+            manager.return_warning('You have too many tasks.');
     })
 
 // note remove <id>  -  remove from task list task with some id
 commander
-    .command('remove')
+    .command('remove <id>')
     .alias('rv')
     .description('Remove complete or not actual task from task list with <id>.')
-    .action((cmd) => {
+    .action((id, cmd) => {
         // Remove task with <id>
+        manager.remove_task(id);
     })
 
 // note modification <id>  -  modification task with some id
 commander
-    .command('modific')
+    .command('modific <id>')
     .alias('mod')
     .description('Modification task: text and priority with <id>.')
-    .action((cmd) => {
-        prompt([
-            {type: 'input', name: 'task_text', message: 'Task text: '},
-            {type: 'input', name: 'task_priority', message: 'Task priority'}
-        ]).then((options) => {
-            // Update task with <task_text> and <task_priority>
-        })
+    .action((id, cmd) => {
+        let task_list_length = dataworker.get_tasks(manager.data_file_dir).length;
+        if (id >= 1 && id <= task_list_length) 
+            prompt([
+                {type: 'input', name: 'task_text', message: 'Task text: '},
+                {type: 'input', name: 'task_priority', message: 'Task priority: '}
+            ]).then((options) => {
+                // Update task with <task_text> and <task_priority>
+                let task_data = [];
+                for (prop in options) {
+                    task_data.push(options[prop]);
+                }
+                let task_text = task_data[0];
+                let task_priority = task_data[1];
+
+                manager.update_task(id, task_text, task_priority);
+            })
+        else 
+            manager.return_error('Invalid task id!');
     })
 
 commander.parse(process.argv)  // Take array of string for parsing
