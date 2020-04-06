@@ -119,7 +119,13 @@ commander
                 let task_text = task_data[0];
                 let task_priority = task_data[1];
 
-                manager.update_task(id, task_text, task_priority);
+                if ((manager.valid_priority_num.exec(task_priority)) || (manager.valid_priority.exec(task_priority))) {
+                    if (!manager.valid_priority_num.exec(task_priority)) 
+                        task_priority = manager.output_colors_name.indexOf(task_priority) + 1;
+                    manager.update_task(id, task_text, task_priority);
+                } else {
+                    manager.return_error('Ivalid priority input!')
+                }
             })
         else 
             manager.return_error('Invalid task id!');

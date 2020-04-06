@@ -135,14 +135,23 @@ class Manager {
         /* Updating Task with Id */
         let task_list = dataworker.get_tasks(this.data_file_dir, 'last');
         id--;
-        if (task_priority >= 0 && task_priority <= 3) {
-            task_list[id].priority = task_priority;
-            task_list[id].text = task_text;
+        if (task_priority != '-') {
+            if (task_priority >= 0 && task_priority <= 3) {
+                task_list[id].priority = task_priority;
+                if (task_text != '-')
+                    task_list[id].text = task_text;
+                dataworker.update_task_list(this.data_file_dir, task_list);
+
+                this.return_success()
+            } else {
+                this.return_error('Invalid task priority!');
+            }
+        } else {
+            if (task_text != '-')
+                    task_list[id].text = task_text;
             dataworker.update_task_list(this.data_file_dir, task_list);
 
             this.return_success()
-        } else {
-            this.return_error('Invalid task priority!');
         }
     }
 
@@ -152,7 +161,7 @@ class Manager {
         if (id == 'all') {
             // Remove all tasks
             dataworker.update_task_list(this.data_file_dir, []);
-            
+
             this.return_success();
         } else if (this.valid_task_id_nums.exec(id)) {
             // Remove task with id
