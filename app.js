@@ -91,7 +91,12 @@ commander
     .description('Remove complete or not actual task from task list with <id>.')
     .action((id, cmd) => {
         // Remove task with <id>
-        manager.remove_task(id);
+        prompt([
+            {type: 'confirm', name: 'confirm', message: 'Are you sure? '}
+        ]).then((options) => {
+            if (options.confirm)
+                manager.remove_task(id);
+        })
     })
 
 // note modification <id>  -  modification task with some id

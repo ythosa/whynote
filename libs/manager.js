@@ -96,25 +96,25 @@ class Manager {
         id++; 
         if (color.bg != null)
             console.log(
-                '| ' + chalk.rgb(r, g, b)(id) +
-                ' | ' + chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b)
+                '|' + chalk.rgb(r, g, b)(id) +
+                '| ' + chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b)
                 .rgb(color.text.r, color.text.g, color.text.b)(' ' + task + ' ') + '.'
             )
         else 
             console.log(
-                '| ' + chalk.rgb(r, g, b)(id) +
-                ' | ' + chalk.rgb(color.text.r, color.text.g, color.text.b)(' '+task+'.')
+                '|' + chalk.rgb(r, g, b)(id) +
+                '| ' + chalk.rgb(color.text.r, color.text.g, color.text.b)(''+task+'.')
             )
     }
 
     get_task_list(sort_type) {
         /* Output all Tasks with Choiced Sort Type */
         const task_list = dataworker.get_tasks(this.data_file_dir, sort_type);
-        let id = 0;
-
-        console.log();
-        this.print_blank_line('----------');
-        if (task_list.length)
+        
+        if (task_list.length) {
+            let id = 0;
+            console.log();
+            this.print_blank_line('----------');
             while (id < task_list.length) {
                 let task_priority = task_list[id]['priority'];
                 if (task_priority == 3)
@@ -125,9 +125,10 @@ class Manager {
                     this.print_task(id, task_list[id].text, this.output_colors['inessental'])
                 id++;
             }
-        else 
-            console.log(chalk.yellowBright('    Task list is clear.'))
-        this.print_blank_line('----------');
+            this.print_blank_line('----------');
+        } else 
+            this.return_warning('Task list is clear. ')
+        
     }
 
     update_task(id, task_text, task_priority) {
@@ -149,9 +150,12 @@ class Manager {
         /* Remove Task with Id */
         let task_list = dataworker.get_tasks(this.data_file_dir, 'last');
         if (id == 'all') {
+            // Remove all tasks
             dataworker.update_task_list(this.data_file_dir, []);
+            
             this.return_success();
         } else if (this.valid_task_id_nums.exec(id)) {
+            // Remove task with id
             id--;
             if (id >= 0 && id < task_list.length) {
                 task_list = [
@@ -165,6 +169,7 @@ class Manager {
                 this.return_error('There is no task with this id!')
             }        
         } else if (this.valid_task_id_interval.exec(id)) {
+            // Remove tasks with id from start to end
             let start = this.valid_task_id_interval.exec(id)[1] - 1;
             let end = this.valid_task_id_interval.exec(id)[2] - 1;
             if ((start < end) && (start < task_list.length - 1) && (end < task_list.length) && (start >= 0) && (end >= 1)) {
@@ -173,6 +178,7 @@ class Manager {
                     ...task_list.slice(end+1)
                 ]
                 dataworker.update_task_list(this.data_file_dir, task_list);
+
                 this.return_success();
             } else {
                 this.return_error('Invalid id!');

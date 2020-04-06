@@ -5,7 +5,7 @@ const fs = require('fs')
 class DataWorker {
 
     static get_tasks(data_dir, sort_type) {
-        /* Get task list from json file */
+        /* Get Task List from json File */
         let task_list = fs.readFileSync(`${data_dir}`, "utf8");
         task_list = JSON.parse(task_list);
         
@@ -24,7 +24,7 @@ class DataWorker {
     }
 
     static add_task(data_dir, task) {
-        /* Add task to data file */
+        /* Add Task to Data File */
         let task_list = DataWorker.get_tasks(data_dir);
         // Update task list
         task_list = [
@@ -36,6 +36,7 @@ class DataWorker {
     }
 
     static update_task_list(data_dir, task_list) {
+        /* Updating Task List in Data File */
         task_list = JSON.stringify(task_list, null, '   ');
         fs.writeFileSync(data_dir, task_list, "utf8");
     }
