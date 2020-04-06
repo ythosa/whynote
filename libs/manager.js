@@ -8,9 +8,14 @@ class Manager {
     constructor() {
         // Valid priority of task
         this.valid_priority_num = /^[1|2|3]$/;
+        this.valid_priority = /^[inessental|average|important']$/
+
+        // Valid task id
+        this.valid_task_id_nums = /^[0-9]$/;
+        this.valid_task_id_interval = /^([0-8])-([0-9])$/
 
         // Color Palette
-        this.output_colors_name = ['inessental', 'average', 'important',];
+        this.output_colors_name = ['inessental', 'average', 'important']
         this.output_colors = {
             important: {
                 text: {r: 250, g: 250, b: 250},
@@ -39,33 +44,43 @@ class Manager {
         this.data_file_dir = take_data_file_dir();  
     }
 
-    print_blank_line() {
+    print_blank_line(text) {
         /* Just Blank Line */
-        console.log('----------------')
+        let i = 0;
+        let blank_line = [];
+        while (i < text.length + 3) {
+            blank_line.push('-')
+            i++;
+        }
+        blank_line = blank_line.join('');
+        console.log(blank_line)
     }
 
-    return_error(text) {
+    return_error(e) {
         /* Return Error Template */
+        let text = `   Error! ${e}`;
         console.log();
-        this.print_blank_line();
-        console.log(chalk.redBright(`   Error! ${text}`));
-        this.print_blank_line();
+        this.print_blank_line(text);
+        console.log(chalk.redBright(text));
+        this.print_blank_line(text);
     }
 
-    return_warning(text) {
+    return_warning(w) {
         /* Return Warning Template */
+        let text = `    Warning! ${w}`;
         console.log();
-        this.print_blank_line();
-        console.log(chalk.yellowBright(`    Warning! ${text}`));
-        this.print_blank_line();
+        this.print_blank_line(text);
+        console.log(chalk.yellowBright(text));
+        this.print_blank_line(text);
     }
 
     return_success() {
         /* Return Seccess of Operation */
+        let text = `    Success! `;
         console.log();
-        this.print_blank_line();
-        console.log(chalk.greenBright(`    Success!`));
-        this.print_blank_line();
+        this.print_blank_line(text);
+        console.log(chalk.greenBright(text));
+        this.print_blank_line(text);
     }
 
     add_task(task) {
@@ -98,7 +113,7 @@ class Manager {
         let id = 0;
 
         console.log();
-        this.print_blank_line();
+        this.print_blank_line('----------');
         if (task_list.length)
             while (id < task_list.length) {
                 let task_priority = task_list[id]['priority'];
@@ -112,7 +127,7 @@ class Manager {
             }
         else 
             console.log(chalk.yellowBright('    Task list is clear.'))
-        this.print_blank_line();
+        this.print_blank_line('----------');
     }
 
     update_task(id, task_text, task_priority) {
@@ -133,18 +148,38 @@ class Manager {
     remove_task(id) {
         /* Remove Task with Id */
         let task_list = dataworker.get_tasks(this.data_file_dir, 'last');
-        id--;
-        if (id >= 0 && id < task_list.length) {
-            task_list = [
-                ...task_list.slice(0, id),
-                ...task_list.slice(++id)
-            ]
-            dataworker.update_task_list(this.data_file_dir, task_list);
-
+        if (id == 'all') {
+            dataworker.update_task_list(this.data_file_dir, []);
             this.return_success();
+        } else if (this.valid_task_id_nums.exec(id)) {
+            id--;
+            if (id >= 0 && id < task_list.length) {
+                task_list = [
+                    ...task_list.slice(0, id),
+                    ...task_list.slice(++id)
+                ]
+                dataworker.update_task_list(this.data_file_dir, task_list);
+
+                this.return_success();
+            } else {
+                this.return_error('There is no task with this id!')
+            }        
+        } else if (this.valid_task_id_interval.exec(id)) {
+            let start = this.valid_task_id_interval.exec(id)[1] - 1;
+            let end = this.valid_task_id_interval.exec(id)[2] - 1;
+            if ((start < end) && (start < task_list.length - 1) && (end < task_list.length) && (start >= 0) && (end >= 1)) {
+                task_list = [
+                    ...task_list.slice(0, start),
+                    ...task_list.slice(end+1)
+                ]
+                dataworker.update_task_list(this.data_file_dir, task_list);
+                this.return_success();
+            } else {
+                this.return_error('Invalid id!');
+            }
         } else {
-            this.return_error('There is no task with this id!')
-        }        
+            this.return_error('Invalid id!');
+        }
     }
 }
 

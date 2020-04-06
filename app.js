@@ -63,7 +63,7 @@ commander
                 let task_text = task_data[0];
                 let task_priority = task_data[1];
 
-                if ((manager.valid_priority_num.exec(task_priority)) || (manager.output_colors_name.indexOf(task_priority)) != -1) {
+                if ((manager.valid_priority_num.exec(task_priority)) || (manager.valid_priority.exec(task_priority))) {
                     if (!manager.valid_priority_num.exec(task_priority)) 
                         task_priority = manager.output_colors_name.indexOf(task_priority) + 1;
 
