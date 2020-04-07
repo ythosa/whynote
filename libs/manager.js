@@ -8,7 +8,7 @@ class Manager {
     constructor() {
         // Valid priority of task
         this.valid_priority_num = /^[1|2|3]$/;
-        this.valid_priority = /^[inessental|average|important']$/
+        this.valid_priority = /[(inessental)|(average)|(important)']/
 
         // Valid task id
         this.valid_task_id_nums = /^[0-9]$/;
