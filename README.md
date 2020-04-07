@@ -39,5 +39,5 @@
        *  `note --version|-V`
    -   Get list of tasks.
        *  `note list [--sort|-S <sort_type>] `
-       *  `--strict|-S` flag carries out a sorting file list. Can be `priority` or `date`
+       *  `--sort` flag carries out a sorting file list. Can be `priority` or `date`
    -   ...
