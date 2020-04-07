@@ -33,11 +33,15 @@
 ---
 
 ###   CLI Commands:
-   -   Get _whynote_ help.
+   -   Get _whynote_ help:
        *  `note --help|-h`
-   -   Get _whynote_ version.
+   -   Get _whynote_ version:
        *  `note --version|-V`
-   -   Get list of tasks.
-       *  `note list [--sort|-S <sort_type>] `
+   -   Get list of tasks:
+       *  `note list [--sort|-S <sort_type>] `,
        *  `--sort` flag carries out a sorting file list. Can be `priority` or `date`
    -   ...
+   
+---
+
+###   Using Examples:
