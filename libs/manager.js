@@ -15,21 +15,25 @@ class Manager {
         this.valid_task_id_interval = /^([0-8])-([0-9])$/
 
         // Color Palette
-        this.output_colors_name = ['inessental', 'average', 'important']
+        this.output_colors_name = [
+            'inessental',
+            'average',
+            'important',
+        ]
         this.output_colors = {
             important: {
                 text: {r: 250, g: 250, b: 250},
-                bg: {r: 141, g: 127, b: 210}
+                bg: {r: 141, g: 127, b: 210},
             },
             average: {
                 text: {r: 93, g: 85, b: 190},
-                bg: {r: 250, g: 250, b: 250}
+                bg: {r: 250, g: 250, b: 250},
             },
             inessental: {
                 text: {r: 211, g: 201, b: 237},
-                bg: null
+                bg: null,
             },
-            primary: {r: 211, g: 201, b:237}
+            primary: {r: 211, g: 201, b:237},
         };
 
         // Get correct file path ./data/data_file.json

@@ -50,8 +50,16 @@ commander
         let task_list_length = dataworker.get_tasks(manager.data_file_dir).length;
         if (task_list_length < 9)
             prompt([
-                {type: 'input', name: 'task_text', message: 'Task text: '},
-                {type: 'input', name: 'task_priority', message: 'Task priority: '}
+                {
+                    type: 'input',
+                    name: 'task_text', 
+                    message: 'Task text: ',
+                },
+                {
+                    type: 'input', 
+                    name: 'task_priority', 
+                    message: 'Task priority: ',
+                }
             ]).then((options) => {
                 // Add task with <name> and <priority>
 
@@ -73,7 +81,7 @@ commander
                     let task = {
                         'priority': task_priority,
                         'text': task_text,
-                        'date': task_date
+                        'date': task_date,
                     }
                     // Adding task to task list
                     manager.add_task(task);
@@ -93,7 +101,11 @@ commander
     .action((id, cmd) => {
         // Remove task with <id>
         prompt([
-            {type: 'confirm', name: 'confirm', message: 'Are you sure? '}
+            {
+                type: 'confirm', 
+                name: 'confirm', 
+                message: 'Are you sure? ',
+            }
         ]).then((options) => {
             if (options.confirm)
                 manager.remove_task(id);
@@ -109,8 +121,16 @@ commander
         let task_list_length = dataworker.get_tasks(manager.data_file_dir).length;
         if (id >= 1 && id <= task_list_length) 
             prompt([
-                {type: 'input', name: 'task_text', message: 'Task text: '},
-                {type: 'input', name: 'task_priority', message: 'Task priority: '}
+                {
+                    type: 'input',
+                    name: 'task_text',
+                    message: 'Task text: ',
+                },
+                {
+                    type: 'input', 
+                    name: 'task_priority', 
+                    message: 'Task priority: ',
+                }
             ]).then((options) => {
                 // Update task with <task_text> and <task_priority>
                 let task_data = [];

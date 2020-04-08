@@ -29,7 +29,7 @@ class DataWorker {
         // Update task list
         task_list = [
             ...task_list,
-            task
+            task,
         ]
         task_list = JSON.stringify(task_list, null, '   ');
         fs.writeFileSync(data_dir, task_list, "utf8");
