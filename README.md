@@ -1,3 +1,4 @@
+<br>
 <h1 align="center">whynote</h1>
 <div align="center">
   
@@ -12,11 +13,11 @@
 </div>
 
 # Installation:
--   Install [Node.js](https://nodejs.org/en/) 
--   Clone this repo: `git clone https://github.com/Ythosa/whynote`
--   Install dependences by writing in console: `npm install`
--   Setup module by writing in console: `npm link --force`
--   Done, you can use it from your `cmd`
+-   Install [Node.js](https://nodejs.org/en/),
+-   Clone this repo: `git clone https://github.com/Ythosa/whynote`,
+-   Install dependences by writing in console: `npm install`,
+-   Setup module by writing in console: `npm link --force`,
+-   Done, you can use it from your `cmd`.
 
 <br>
 
