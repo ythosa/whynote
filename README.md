@@ -30,8 +30,6 @@
 
 # Documentation
 
----
-
 ##   Whynote's Commands:
 
    *   ### Get _whynote_ help:
