@@ -33,18 +33,23 @@
 ---
 
 ###   Whynote's Commands:
+
    -   Get _whynote_ help:
        *  `note --help|-h [command]`;
+       
    -   Get _whynote_ version:
        *  `note --version|-V`;
+       
    -   Get list of tasks:
        *  `note list|l [--sort|-S <sort_type>] `,
        *  `--sort` flag carries out a sorting file list. Can be `priority` or `date`,
        *  `--help|h`  -  get info about this function;
+       
    -   Adding task to task list:
        *  `note add|a`,
        *  You will need to enter a text of task and task priority,
        *  `--help|h` flag exists to get info about this function;
+   
    -   Removing task:
        *  `note remove|rv <id>`,
        *  Removing task from task list with id,
@@ -53,6 +58,7 @@
           *  `<id>` number of task number in task list,
           *  `start-end` - using this syntax you can delete tasks from id peer `start` to id peer `end`;
        *  `--help|h`  -  get info about this method;
+       
    -   Modification task:
        *  `note modific|mod <id>`,
        *  Via this command you can change task's with `id` _text_ and _priority_:
