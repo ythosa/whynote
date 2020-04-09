@@ -34,14 +34,29 @@
 
 ###   CLI Commands:
    -   Get _whynote_ help:
-       *  `note --help|-h`
+       *  `note --help|-h`;
    -   Get _whynote_ version:
-       *  `note --version|-V`
+       *  `note --version|-V`;
    -   Get list of tasks:
        *  `note list [--sort|-S <sort_type>] `,
-       *  `--sort` flag carries out a sorting file list. Can be `priority` or `date`
+       *  `--sort` flag carries out a sorting file list. Can be `priority` or `date`,
+       *  `--help|h`  -  get info about this function;
+   -   Adding task to task list:
+       *  `note add|a`,
+       *  You will need to enter a text of task and task priority,
+       *  `--help|h`  -  get info about this function;
+   -   Removing task:
+       *  `note remove|rv <id>,
+       *  Removing task from task list with id,
+       *  Id can be:
+          * `all`, by this way you can remove all tasks from task list,
+          *  `<id>` number of task number in task list,
+          *  `start-end` - using this syntax you can delete tasks from id peer `start` to id peer `end`;
+   -   Modification task:
+       
    -   ...
    
 ---
 
 ###   Using Examples:
+   - ...
