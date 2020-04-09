@@ -1,13 +1,13 @@
 <h1 align="center">whynote</h1>
 <div align="center">
   
----
+<br>
 
 [![Badge](https://img.shields.io/badge/Uses-Node.js-green.svg?style=flat-square)](1)
 [![Badge](https://img.shields.io/badge/Open-Source-important.svg?style=flat-square)](1)
 [![Badge](https://img.shields.io/badge/Made_with-Love-ff69b4.svg?style=flat-square)](1)
     
----
+<br>
 
 </div>
 
@@ -18,7 +18,7 @@
 -   Setup module by writing in console: `npm link --force`
 -   Done, you can use it from your `cmd`
 
----
+<br>
 
 # Description
 -    Command line task manager;
@@ -26,9 +26,11 @@
 -    It is easy to install and easy to use;
 -    It has great functionality.
 
----
+<br>
 
 # Documentation
+
+<br>
 
 ##   Whynote's Commands:
 
@@ -63,7 +65,7 @@
           * If you don't want to change task's _text_ or/and _priority_, you can write in following prompts: `-`;
        *  `--help|h`.
    
----
+<br>
 
 ##   Using Examples:
    - ...
