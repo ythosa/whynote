@@ -46,7 +46,9 @@
        
    *   ### Adding task to task list:
        *  `note add|a`,
-       *  You will need to enter a text of task and task priority,
+       *  You will need to enter:
+          * Task text,
+          * Task priority, that could be `important` or `3`, `average` or `2`, `inessental` or `1`;
        *  `--help|h` flag exists to get info about this function;
    
    *   ### Removing task:
