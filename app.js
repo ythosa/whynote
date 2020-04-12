@@ -84,6 +84,7 @@ commander
                 let is_deadline_correct = false;
                 cmd.bytime ? is_deadline_correct = manager.valid_deadline.test(task_deadline) : null;
 
+                // Validation deadline
                 let date = new Date();
                 if (is_deadline_correct) {
                     day = task_deadline.replace(manager.valid_deadline, '$1');
@@ -93,7 +94,8 @@ commander
                     if (mounth <= 0 || mounth >= 13) is_deadline_correct = false;
 
                     year = task_deadline.replace(manager.valid_deadline, '$3');
-                    if (Number(year) != date.getUTCFullYear()) is_deadline_correct = false;
+                    if (Number(String(year).slice(1)) != date.getUTCFullYear() && year != '') is_deadline_correct = false;
+                    if (year == '') year = date.getUTCFullYear();
                     
                     hours = task_deadline.replace(manager.valid_deadline, '$4');
                     if (hours == '') hours = null;
@@ -107,17 +109,16 @@ commander
                 if (((manager.valid_priority_num.exec(task_priority)) || (manager.valid_priority.exec(task_priority))) && is_deadline_correct) {
                     if (!manager.valid_priority_num.exec(task_priority)) 
                         task_priority = manager.output_colors_name.indexOf(task_priority) + 1;
+                    
+                    if (cmd.bytime) {
+                        if (hours != null && minutes != null)
+                            task_deadline = new Date(Number(year), Number(mounth), Number(day), Number(hours), Number(minutes), 0, 0)
+                        else
+                            task_deadline = new Date(year, mounth, day, 23, 59, 59)
 
-                    if (hours != null && minutes != null)
-                        task_deadline = new Date(Number(year), Number(mounth), Number(day), Number(hours), Number(minutes), 0, 0)
-                    else
-                        task_deadline = new Date(year, mounth, day)
-
-                    task_deadline = new Date(2011, 0, 1, 2, 3, 4, 567)
-
-                    task_deadline = task_deadline.toLocaleString('ru');
-
-                    console.log(task_deadline)
+                        task_deadline = task_deadline.toLocaleString('ru');
+                    } else
+                        task_deadline = null;
 
                     // Create task dict
                     let task_date = Date.now();
@@ -130,7 +131,7 @@ commander
                     // Adding task to task list
                     manager.add_task(task);
                 } else {
-                    if (is_deadline_correct) 
+                    if (!is_deadline_correct) 
                         manager.return_error('Invalid time input!')
                     else
                         manager.return_error('Invalid task priority!');
