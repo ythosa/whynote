@@ -45,7 +45,7 @@ commander
 commander
     .command('add')
     .alias('a')
-    .option(`--bytime`, 'Add task by time.')
+    .option(`--dl`, 'Add task by time.')
     .description('Adding task.')
     .action((cmd) => {
         let task_list_length = dataworker.get_tasks(manager.data_file_dir).length;
@@ -61,7 +61,7 @@ commander
                     name: 'task_priority', 
                     message: 'Task priority: ',
                 },
-                cmd.bytime ?
+                cmd.dl ?
                 {
                     type: 'input',
                     name: 'deadline',
@@ -80,9 +80,9 @@ commander
                 task_priority = task_priority.trim();
 
                 let task_deadline = null;
-                cmd.bytime ? task_deadline = String(task_data[2]).trim() : null;
+                cmd.dl ? task_deadline = String(task_data[2]).trim() : null;
                 let is_deadline_correct = false;
-                cmd.bytime ? is_deadline_correct = manager.valid_deadline.test(task_deadline) : null;
+                cmd.dl ? is_deadline_correct = manager.valid_deadline.test(task_deadline) : null;
 
                 // Validation deadline
                 let date = new Date();
@@ -93,10 +93,8 @@ commander
                     mounth = task_deadline.replace(manager.valid_deadline, '$2') - 1;
                     if (mounth <= 0 || mounth >= 13) is_deadline_correct = false;
 
-                    year = task_deadline.replace(manager.valid_deadline, '$3');
-                    if (Number(String(year).slice(1)) != date.getUTCFullYear() && year != '') is_deadline_correct = false;
-                    if (year == '') year = date.getUTCFullYear();
-                    
+                    year = date.getUTCFullYear();
+
                     hours = task_deadline.replace(manager.valid_deadline, '$4');
                     if (hours == '') hours = null;
                     if (hours != null && (hours <= -1 || hours >= 23)) is_deadline_correct = false;
@@ -110,14 +108,24 @@ commander
                     if (!manager.valid_priority_num.exec(task_priority)) 
                         task_priority = manager.output_colors_name.indexOf(task_priority) + 1;
                     
-                    if (cmd.bytime) {
+                    if (cmd.dl)
                         if (hours != null && minutes != null)
-                            task_deadline = new Date(Number(year), Number(mounth), Number(day), Number(hours), Number(minutes), 0, 0)
+                            task_deadline = {
+                                'year': year,
+                                'mounth': mounth,
+                                'day': day,
+                                'hours': hours,
+                                'minutes': minutes,
+                            }
                         else
-                            task_deadline = new Date(year, mounth, day, 23, 59, 59)
-
-                        task_deadline = task_deadline.toLocaleString('ru');
-                    } else
+                            task_deadline = {
+                                'year': year,
+                                'mounth': mounth,
+                                'day': day,
+                                'hours': 23,
+                                'minutes': 59,
+                            }
+                    else
                         task_deadline = null;
 
                     // Create task dict

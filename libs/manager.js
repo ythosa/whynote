@@ -11,7 +11,7 @@ class Manager {
         this.valid_priority = /[(inessental)|(average)|(important)']/;
 
         // Valid task deadline
-        this.valid_deadline = /^(\d{2})[-|\/](\d{2})([-|\/]\d{4})?( (\d{2})\:(\d{2}))?$/;
+        this.valid_deadline = /^(\d{2})[-|\/|.](\d{2})( (\d{2})\:(\d{2}))?$/;
 
         // Valid task id
         this.valid_task_id_nums = /^[0-9]$/;
