@@ -8,11 +8,14 @@ class Manager {
     constructor() {
         // Valid priority of task
         this.valid_priority_num = /^[1|2|3]$/;
-        this.valid_priority = /[(inessental)|(average)|(important)']/
+        this.valid_priority = /[(inessental)|(average)|(important)']/;
+
+        // Valid task deadline
+        this.valid_deadline = /^(\d{2})[-|\/](\d{2})[-|\/](\d{4})( (\d{2})\:(\d{2}))?$/
 
         // Valid task id
         this.valid_task_id_nums = /^[0-9]$/;
-        this.valid_task_id_interval = /^([0-8])-([0-9])$/
+        this.valid_task_id_interval = /^([0-8])-([0-9])$/;
 
         // Color Palette
         this.output_colors_name = [

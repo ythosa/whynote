@@ -45,6 +45,7 @@ commander
 commander
     .command('add')
     .alias('a')
+    .option(`--bytime`, 'Add task by time.')
     .description('Adding task.')
     .action((cmd) => {
         let task_list_length = dataworker.get_tasks(manager.data_file_dir).length;
@@ -59,7 +60,13 @@ commander
                     type: 'input', 
                     name: 'task_priority', 
                     message: 'Task priority: ',
-                }
+                },
+                cmd.bytime ?
+                {
+                    type: 'input',
+                    name: 'deadline',
+                    message: 'Deadline:',
+                } : null
             ]).then((options) => {
                 // Add task with <name> and <priority>
 
@@ -70,7 +77,14 @@ commander
                 }
                 let task_text = task_data[0];
                 let task_priority = String(task_data[1]);
-                task_priority = task_priority.trim()
+                task_priority = task_priority.trim();
+
+                let task_deadline = null;
+                cmd.bytime ? task_deadline = task_data[2] : null;
+                let is_deadline_correct = false;
+                cmd.bytime ? is_deadline_correct = manager.valid_deadline.test(task_deadline) : null;
+
+                // console.log(is_deadline_correct)
 
                 if ((manager.valid_priority_num.exec(task_priority)) || (manager.valid_priority.exec(task_priority))) {
                     if (!manager.valid_priority_num.exec(task_priority)) 
@@ -82,6 +96,7 @@ commander
                         'priority': task_priority,
                         'text': task_text,
                         'date': task_date,
+                        'deadline': task_deadline,
                     }
                     // Adding task to task list
                     manager.add_task(task);
