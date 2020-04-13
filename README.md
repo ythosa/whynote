@@ -29,7 +29,7 @@
 
 <br>
 
-# Documentation:
+<h1 align="center"> Documentation </h1>
 
 ##   Whynote's Commands:
 
