@@ -12,7 +12,7 @@
 
 </div>
 
-## Installation:
+### Installation:
 -   Install [Node.js](https://nodejs.org/en/),
 -   Clone this repo: `git clone https://github.com/Ythosa/whynote`,
 -   Install dependences by writing in console: `npm install`,
@@ -21,7 +21,7 @@
 
 <br>
 
-## Description:
+### Description:
 -    Command line task manager;
 -    `whynote` is easy way to mark tasks, which need to be completed;
 -    It is easy to install and easy to use;
@@ -30,8 +30,6 @@
 <br>
 
 <h2 align="center"> :.Documentation.: </h2>
-
-<br>
 
 ###   Whynote's Commands:
 
