@@ -11,7 +11,7 @@ class Manager {
         this.valid_priority = /[(inessental)|(average)|(important)']/;
 
         // Valid task deadline
-        this.valid_deadline = /^(\d{2})[-|\/|.](\d{2})( (\d{2})\:(\d{2}))?$/;
+        this.valid_deadline = /^(\d{2})[-|\/|.](\d{2})( (\d+)\:(\d{2}))?$/;
 
         // Valid task id
         this.valid_task_id_nums = /^[0-9]$/;
@@ -125,7 +125,7 @@ class Manager {
         if (task_list.length) {
             let tasks_nottime = [];
             let tasks_bytime = [];
-            for ({id, task} of task_list)
+            for (let task of task_list)
                 if (task.deadline == null)
                     tasks_nottime.push(task)
                 else
@@ -134,25 +134,25 @@ class Manager {
             
             let id = 0;
             // Output tasks with deadline
-            if (tasks_bytime) {
-                tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
-                for ({pos, task} of task_list) {
-                    null;
-                }
-            }
+            // if (tasks_bytime) {
+            //     tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
+            //     for (task of tasks_bytime) {
+            //         null;
+            //     }
+            // }
 
 
             // Output tasks without deadline
             console.log();
             this.print_blank_line('----------');
-            while (id < task_list_nottime.length) {
+            while (id < tasks_nottime.length) {
                 let task_priority = task_list[id]['priority'];
                 if (task_priority == 3)
-                    this.print_task(id, task_list_nottime[id].text, this.output_colors['important'])
+                    this.print_task(id, tasks_nottime[id].text, this.output_colors['important'])
                 else if (task_priority == 2) 
-                    this.print_task(id, task_list_nottime[id].text, this.output_colors['average'])
+                    this.print_task(id, tasks_nottime[id].text, this.output_colors['average'])
                 else 
-                    this.print_task(id, task_list_nottime[id].text, this.output_colors['inessental'])
+                    this.print_task(id, tasks_nottime[id].text, this.output_colors['inessental'])
                 id++;
             }
             this.print_blank_line('----------');

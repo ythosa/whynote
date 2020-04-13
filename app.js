@@ -49,25 +49,26 @@ commander
     .description('Adding task.')
     .action((cmd) => {
         let task_list_length = dataworker.get_tasks(manager.data_file_dir).length;
+        let to_prompt = [
+            {
+                type: 'input',
+                name: 'task_text', 
+                message: 'Task text: ',
+            },
+            {
+                type: 'input', 
+                name: 'task_priority', 
+                message: 'Task priority: ',
+            },
+        ]
+        if (cmd.dl)
+            to_prompt.push({
+                type: 'input',
+                name: 'deadline',
+                message: 'Deadline:',
+            })
         if (task_list_length < 9)
-            prompt([
-                {
-                    type: 'input',
-                    name: 'task_text', 
-                    message: 'Task text: ',
-                },
-                {
-                    type: 'input', 
-                    name: 'task_priority', 
-                    message: 'Task priority: ',
-                },
-                cmd.dl ?
-                {
-                    type: 'input',
-                    name: 'deadline',
-                    message: 'Deadline:',
-                } : null
-            ]).then((options) => {
+            prompt(to_prompt).then((options) => {
                 // Add task with <name> and <priority>
 
                 // Extraction task text and priority
@@ -80,28 +81,30 @@ commander
                 task_priority = task_priority.trim();
 
                 let task_deadline = null;
-                cmd.dl ? task_deadline = String(task_data[2]).trim() : null;
-                let is_deadline_correct = false;
-                cmd.dl ? is_deadline_correct = manager.valid_deadline.test(task_deadline) : null;
+                let is_deadline_correct = true;
+                if (cmd.dl) {
+                    task_deadline = String(task_data[2]).trim();
+                    is_deadline_correct = manager.valid_deadline.test(task_deadline);
 
-                // Validation deadline
-                let date = new Date();
-                if (is_deadline_correct) {
-                    day = task_deadline.replace(manager.valid_deadline, '$1');
-                    if (day <= 0 || day >= 32) is_deadline_correct = false; 
+                    // Validation deadline
+                    let date = new Date();
+                    if (is_deadline_correct) {
+                        day = task_deadline.replace(manager.valid_deadline, '$1');
+                        if (day <= 0 || day >= 32) is_deadline_correct = false; 
 
-                    mounth = task_deadline.replace(manager.valid_deadline, '$2') - 1;
-                    if (mounth <= 0 || mounth >= 13) is_deadline_correct = false;
+                        mounth = task_deadline.replace(manager.valid_deadline, '$2') - 1;
+                        if (mounth <= 0 || mounth >= 13) is_deadline_correct = false;
 
-                    year = date.getUTCFullYear();
+                        year = date.getUTCFullYear();
 
-                    hours = task_deadline.replace(manager.valid_deadline, '$4');
-                    if (hours == '') hours = null;
-                    if (hours != null && (hours <= -1 || hours >= 23)) is_deadline_correct = false;
+                        hours = task_deadline.replace(manager.valid_deadline, '$4');
+                        if (hours == '') hours = null;
+                        if (hours != null && (hours <= -1 || hours >= 23)) is_deadline_correct = false;
 
-                    minutes = task_deadline.replace(manager.valid_deadline, '$5');
-                    if (minutes == '') minutes = null;
-                    if (minutes != null && (minutes <= -1 || minutes >= 60)) is_deadline_correct = false;
+                        minutes = task_deadline.replace(manager.valid_deadline, '$5');
+                        if (minutes == '') minutes = null;
+                        if (minutes != null && (minutes <= -1 || minutes >= 60)) is_deadline_correct = false;
+                    }
                 }
 
                 if (((manager.valid_priority_num.exec(task_priority)) || (manager.valid_priority.exec(task_priority))) && is_deadline_correct) {
