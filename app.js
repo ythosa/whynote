@@ -82,6 +82,7 @@ commander
 
                 let task_deadline = null;
                 let is_deadline_correct = true;
+                let day, mounth, year, hours, minutes;
                 if (cmd.dl) {
                     task_deadline = String(task_data[2]).trim();
                     is_deadline_correct = manager.valid_deadline.test(task_deadline);
@@ -93,7 +94,7 @@ commander
                         if (day <= 0 || day >= 32) is_deadline_correct = false; 
 
                         mounth = task_deadline.replace(manager.valid_deadline, '$2') - 1;
-                        if (mounth <= 0 || mounth >= 13) is_deadline_correct = false;
+                        if (mounth <= -1 || mounth >= 12) is_deadline_correct = false;
 
                         year = date.getUTCFullYear();
 

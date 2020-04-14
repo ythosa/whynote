@@ -11,7 +11,7 @@ class Manager {
         this.valid_priority = /[(inessental)|(average)|(important)']/;
 
         // Valid task deadline
-        this.valid_deadline = /^(\d{2})[-|\/|.](\d{2})( (\d+)\:(\d{2}))?$/;
+        this.valid_deadline = /^(\d+)[-|\/|.](\d+)( (\d+)\:(\d{2}))?$/;
 
         // Valid task id
         this.valid_task_id_nums = /^[0-9]$/;
@@ -116,6 +116,66 @@ class Manager {
 
     classification_tasks_on_time(task_list) {
         /* Classification tasks by deadline */
+        // let date = new Date(year, mounth, day, hours, minutes, 0);
+        // for (let id in task_list) {
+        //     let {year, mounth, day, hours, minutes} = task_list[id].deadline;            
+        //     output_list.push({
+        //         date: {
+        //             mounth: mounth,
+        //             day: day
+        //         },
+        //         task: task_list[id]
+        //     })
+        // }
+        let sort_by_dates_tasks = [
+            {
+                'mounth': mounth_number,
+                'tasks': [
+                    {
+                        'day': day_number,
+                        'tasks': sorted_tasks
+                    }
+                ]
+            }
+        ]
+        let sorted_tasks = [];
+
+        for (let t_id in task_list) {
+            let {_, mounth, day, ...other} = task_list[t_id].deadline;
+            let is_mounth_exist = false;
+             
+            if (!sorted_tasks)
+                for (let t_mounth_id in sorted_tasks)
+                    if (sorted_tasks[t_mounth_id].mounth == mounth) 
+                    {
+                        is_mounth_exist = true;
+                        break;
+                    }
+
+            if (!is_mounth_exist) {
+                sorted_tasks.push(
+                    {
+                        'mounth': mounth,
+                        'tasks': [
+                            {
+                                'day': day,
+                                'tasks': task_list[id]
+                            }
+                        ]
+                    }
+                )
+            } else {
+                let is_date_exist = false;
+                for (let t_day_id in sorted_tasks)
+                    if (sorted_tasks.mounth.day == day)
+                    {
+                        let is_date_exist = true;
+                        break;
+                    }
+                if (!is_date_exist) {
+                    sorted_tasks.mounth.push 
+                }
+        }
     }
 
     get_task_list(sort_type) {
@@ -134,12 +194,12 @@ class Manager {
             
             let id = 0;
             // Output tasks with deadline
-            // if (tasks_bytime) {
-            //     tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
-            //     for (task of tasks_bytime) {
-            //         null;
-            //     }
-            // }
+            if (tasks_bytime) {
+                tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
+                for (let task in tasks_bytime) {
+                    null;
+                }
+            }
 
 
             // Output tasks without deadline
