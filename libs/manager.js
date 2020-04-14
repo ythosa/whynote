@@ -127,23 +127,21 @@ class Manager {
         //         task: task_list[id]
         //     })
         // }
-        let sort_by_dates_tasks = [
-            {
-                'mounth': mounth_number,
-                'tasks': [
-                    {
-                        'day': day_number,
-                        'tasks': sorted_tasks
-                    }
-                ]
-            }
-        ]
+        // let sort_by_dates_tasks = [
+        //     {
+        //         'mounth': mounth_number,
+        //         'tasks': [
+        //             {
+        //                 'day': day_number,
+        //                 'tasks': sorted_tasks
+        //             }
+        //         ]
+        //     }
+        // ]
         let sorted_tasks = [];
-
         for (let t_id in task_list) {
             let {_, mounth, day, ...other} = task_list[t_id].deadline;
             let is_mounth_exist = false;
-             
             if (!sorted_tasks)
                 for (let t_mounth_id in sorted_tasks)
                     if (sorted_tasks[t_mounth_id].mounth == mounth) 
@@ -151,7 +149,6 @@ class Manager {
                         is_mounth_exist = true;
                         break;
                     }
-
             if (!is_mounth_exist) {
                 sorted_tasks.push(
                     {
@@ -159,7 +156,7 @@ class Manager {
                         'tasks': [
                             {
                                 'day': day,
-                                'tasks': task_list[id]
+                                'tasks': [ task_list[t_id] ]
                             }
                         ]
                     }
@@ -167,15 +164,24 @@ class Manager {
             } else {
                 let is_date_exist = false;
                 for (let t_day_id in sorted_tasks)
-                    if (sorted_tasks.mounth.day == day)
+                    if (sorted_tasks.t_mounth_id.tasks[t_day_id] == day)
                     {
-                        let is_date_exist = true;
+                        is_date_exist = true;
                         break;
                     }
                 if (!is_date_exist) {
-                    sorted_tasks.mounth.push 
+                    sorted_tasks.t_mounth_id.tasks.push(
+                        {                           
+                            'day': day,   
+                            'tasks': [ task_list[id] ]
+                        }
+                    )
+                } else {
+                    sorted_tasks.t_mounth_id.tasks.t_day_id.tasks.push(task_list[t_id])
                 }
+            }
         }
+        return sorted_tasks
     }
 
     get_task_list(sort_type) {
