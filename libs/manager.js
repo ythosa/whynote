@@ -116,28 +116,26 @@ class Manager {
 
     classification_tasks_on_time(task_list) {
         /* Classification tasks by deadline */
-        // let date = new Date(year, mounth, day, hours, minutes, 0);
-        // for (let id in task_list) {
-        //     let {year, mounth, day, hours, minutes} = task_list[id].deadline;            
-        //     output_list.push({
-        //         date: {
-        //             mounth: mounth,
-        //             day: day
-        //         },
-        //         task: task_list[id]
-        //     })
-        // }
-        // let sort_by_dates_tasks = [
-        //     {
-        //         'mounth': mounth_number,
-        //         'tasks': [
-        //             {
-        //                 'day': day_number,
-        //                 'tasks': sorted_tasks
-        //             }
-        //         ]
-        //     }
-        // ]
+
+        // Sorting tasks by time, thus sorting the final array
+        for (let id in task_list) {
+            task_list.sort((a, b) => {
+                let {year, mounth, day, hours, minutes} = a.deadline;  
+                let date1 = new Date(year, mounth, day, hours, minutes, 0);
+
+                year = b.deadline.year;
+                mounth = b.deadline.mounth;
+                day = b.deadline.mounth;
+                hours = b.deadline.hours;
+                minutes = b.deadline.minutes;
+                let date2 = new Date(year, mounth, day, hours, minutes, 0);
+
+                return date2 - date1
+            });
+            ;
+        }
+
+        // Classification list
         let sorted_tasks = [];
         for (let t_id in task_list) {
             let {_, mounth, day, ...other} = task_list[t_id].deadline;
@@ -177,7 +175,7 @@ class Manager {
                         }
                     )
                 } else {
-                    sorted_tasks.t_mounth_id.tasks.t_day_id.tasks.push(task_list[t_id])
+                    sorted_tasks.t_mounth_id.tasks.t_day_id.tasks.push(task_list[t_id]);
                 }
             }
         }
@@ -202,6 +200,7 @@ class Manager {
             // Output tasks with deadline
             if (tasks_bytime) {
                 tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
+                console.log(tasks_bytime);
                 for (let task in tasks_bytime) {
                     null;
                 }

@@ -52,5 +52,17 @@
          "hours": "2",
          "minutes": "30"
       }
+   },
+   {
+      "priority": "1",
+      "text": "test",
+      "date": 1587122032715,
+      "deadline": {
+         "year": 2020,
+         "mounth": 9,
+         "day": "11",
+         "hours": "11",
+         "minutes": "30"
+      }
    }
 ]
