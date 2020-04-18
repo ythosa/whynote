@@ -1,12 +1,6 @@
 [
    {
       "priority": "3",
-      "text": "Won't forget sent reports with hometasks",
-      "date": 1586368691671,
-      "deadline": null
-   },
-   {
-      "priority": "2",
       "text": "Learn to exam tickets by physics per day",
       "date": 1586531248119,
       "deadline": null
@@ -19,50 +13,8 @@
    },
    {
       "priority": "1",
-      "text": "pysia",
-      "date": 1586769056540,
-      "deadline": {
-         "year": 2020,
-         "mounth": 11,
-         "day": "11",
-         "hours": "1",
-         "minutes": "40"
-      }
-   },
-   {
-      "priority": "1",
       "text": "Построение многостепенной функции",
       "date": 1586775937115,
       "deadline": null
-   },
-   {
-      "priority": "1",
-      "text": "d",
-      "date": 1586802481537,
-      "deadline": null
-   },
-   {
-      "priority": "1",
-      "text": "test",
-      "date": 1586884897193,
-      "deadline": {
-         "year": 2020,
-         "mounth": 0,
-         "day": "1",
-         "hours": "2",
-         "minutes": "30"
-      }
-   },
-   {
-      "priority": "1",
-      "text": "test",
-      "date": 1587122032715,
-      "deadline": {
-         "year": 2020,
-         "mounth": 9,
-         "day": "11",
-         "hours": "11",
-         "minutes": "30"
-      }
    }
 ]

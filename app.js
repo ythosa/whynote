@@ -105,6 +105,10 @@ commander
                         minutes = task_deadline.replace(manager.valid_deadline, '$5');
                         if (minutes == '') minutes = null;
                         if (minutes != null && (minutes <= -1 || minutes >= 60)) is_deadline_correct = false;
+                    
+                        // Checking if deadline < now date
+                        let task_dl_date = new Date(year, mounth, day, hours, minutes, 0);
+                        if (task_dl_date < Date.now()) is_deadline_correct = false
                     }
                 }
 
@@ -144,7 +148,7 @@ commander
                     manager.add_task(task);
                 } else {
                     if (!is_deadline_correct) 
-                        manager.return_error('Invalid time input!')
+                        manager.return_error('Invalid deadline input!')
                     else
                         manager.return_error('Invalid task priority!');
                 }
