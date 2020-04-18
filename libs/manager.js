@@ -118,6 +118,36 @@ class Manager {
             )
     }
 
+    validation_deadline(task_deadline) {
+        let is_deadline_correct = this.valid_deadline.test(task_deadline);
+
+        // Validation deadline
+        let date = new Date();
+        let year, month, day, hours, minutes;
+        if (is_deadline_correct) {
+            day = task_deadline.replace(this.valid_deadline, '$1');
+            if (day <= 0 || day >= 32) is_deadline_correct = false; 
+
+            month = task_deadline.replace(this.valid_deadline, '$2') - 1;
+            if (month <= -1 || month >= 12) is_deadline_correct = false;
+
+            year = date.getUTCFullYear();
+
+            hours = task_deadline.replace(this.valid_deadline, '$4');
+            if (hours == '') hours = null;
+            if (hours != null && (hours <= -1 || hours >= 23)) is_deadline_correct = false;
+
+            minutes = task_deadline.replace(this.valid_deadline, '$5');
+            if (minutes == '') minutes = null;
+            if (minutes != null && (minutes <= -1 || minutes >= 60)) is_deadline_correct = false;
+        
+            // Checking if deadline < now date
+            let task_dl_date = new Date(year, month, day, hours, minutes, 0);
+            if (task_dl_date < Date.now()) is_deadline_correct = false
+        }
+        return [is_deadline_correct, year, month, day, hours, minutes]
+    }
+
     sorting_tasks_with_dl(task_list) {
         // Sorting tasks by time, thus sorting the final array
         task_list.sort((a, b) => {
@@ -165,7 +195,7 @@ class Manager {
 
                 let t_day_id;
                 for (t_day_id in sorted_tasks[t_month_id].tasks)
-                    if (sorted_tasks[t_month_id].tasks[t_day_id] == day)
+                    if (sorted_tasks[t_month_id].tasks[t_day_id].day == day)
                     {
                         is_date_exist = true;
                         break;
@@ -193,9 +223,9 @@ class Manager {
         return monthNames[mon]
       }
 
-    get_task_list(sort_type) {
+    get_task_list() {
         /* Output all Tasks with Choiced Sort Type */
-        const task_list = dataworker.get_tasks(this.data_file_dir, sort_type);
+        const task_list = dataworker.get_tasks(this.data_file_dir, 'last');
         
         // Separetion list by 
         if (task_list.length) {
@@ -208,22 +238,23 @@ class Manager {
                     tasks_bytime.push(task)
             
             
-            let id = 0;
+            let id_t = 1;
             // Output tasks with deadline
-            if (tasks_bytime) {
+            if (tasks_bytime.length != 0) {
                 tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
                 let classified_tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
                 
-                console.log()
-                this.print_blank_line(null)
-                console.log(`   ~-~Task List~-~`)
+                console.log();
+                this.print_blank_line(null);
+                console.log(`   ~-~Task List~-~`);
                 this.print_blank_line(null);
                 for (let t_month in classified_tasks_bytime) {
                     console.log(`· ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)}: `)
                     for (let t_day in classified_tasks_bytime[t_month].tasks) {
                         console.log(`·· by the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th number: `);
                         classified_tasks_bytime[t_month].tasks[t_day].tasks.forEach(task => {
-                            console.log(`··· ${task.text}`)
+                            console.log(`··· |${id_t}| ${task.text}`);
+                            id_t++;
                         })
                     }
                 }
@@ -234,43 +265,73 @@ class Manager {
             this.print_blank_line();
             console.log(`   ~-~Note List~-~`)
             this.print_blank_line(null);
-            while (id < tasks_nottime.length) {
-                let task_priority = task_list[id]['priority'];
+            let id_n = 0;
+            while (id_n < tasks_nottime.length) {
+                let task_priority = task_list[id_n]['priority'];
                 if (task_priority == 3)
-                    this.print_task(id, tasks_nottime[id].text, this.output_colors['important'])
+                    this.print_task(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['important'])
                 else if (task_priority == 2) 
-                    this.print_task(id, tasks_nottime[id].text, this.output_colors['average'])
+                    this.print_task(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['average'])
                 else 
-                    this.print_task(id, tasks_nottime[id].text, this.output_colors['inessental'])
-                id++;
+                    this.print_task(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['inessental'])
+                id_n++;
             }
             this.print_blank_line(null);
+
+            dataworker.update_task_list(this.data_file_dir, [
+                ...tasks_bytime,
+                ...tasks_nottime
+            ]);
         } else 
-            this.return_warning('Task list is clear. ')
+            this.return_warning('Task list is clear.')
         
     }
 
-    update_task(id, task_text, task_priority) {
+    update_task(id, task_text, task_priority, task_deadline) {
         /* Updating Task with Id */
         let task_list = dataworker.get_tasks(this.data_file_dir, 'last');
         id--;
-        if (task_priority != '-') {
-            if (task_priority >= 0 && task_priority <= 3) {
-                task_list[id].priority = task_priority;
-                if (task_text != '-')
-                    task_list[id].text = task_text;
-                dataworker.update_task_list(this.data_file_dir, task_list);
 
-                this.return_success()
-            } else {
-                this.return_error('Invalid task priority!');
+        if ((this.valid_priority_num.exec(task_priority)) || (this.valid_priority.exec(task_priority) || (task_priority == '-'))) {
+
+            if (task_deadline != '-') { 
+                let [is_deadline_correct, year, month, day, hours, minutes] = this.validation_deadline(task_deadline)
+                if (is_deadline_correct) {
+                    task_deadline = {
+                        "year": year,
+                        "month": month,
+                        "day": day,
+                        "hours": hours,
+                        "minutes": minutes,
+                    }
+                    task_list[id].deadline = task_deadline;
+                    if (!this.valid_priority_num.exec(task_priority) && task_priority != '-') 
+                        task_priority = this.output_colors_name.indexOf(task_priority) + 1;
+
+                    if (task_text != '-')
+                        task_list[id].text = task_text;
+
+                    if (task_priority != '-') {
+                        if (task_priority >= 0 && task_priority <= 3) {
+                            task_list[id].priority = task_priority;
+
+                            dataworker.update_task_list(this.data_file_dir, task_list);
+
+                            this.return_success()
+                        } else {
+                            this.return_error('Invalid task priority!');
+                        }
+                    } else {
+                        dataworker.update_task_list(this.data_file_dir, task_list);
+
+                        this.return_success()
+                    }
+                } else {
+                    this.return_error('Ivalid deadline date input!');
+                }
             }
         } else {
-            if (task_text != '-')
-                    task_list[id].text = task_text;
-            dataworker.update_task_list(this.data_file_dir, task_list);
-
-            this.return_success()
+            this.return_error('Ivalid priority input!')
         }
     }
 
