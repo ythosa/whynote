@@ -23,7 +23,7 @@ commander.version('v1.0.0').description('Command line interface, which implement
 // Create task manager
 const manager = new Manager()
 
-    /* Commander Commands */ 
+        /* Commander Commands */ 
 // note list [options]  -  get list of notes
 commander
     .command('list')
@@ -41,12 +41,108 @@ commander
             manager.get_task_list('priority')
     })
 
-// note add - adding some task 
+// note add-task  -  adding some task
 commander
-    .command('add')
-    .alias('a')
-    .option(`--dl`, 'Add task by time.')
-    .description('Adding task.')
+.command('add-task')
+.alias('at')
+.description('Adding task.')
+.action((cmd) => {
+    let task_list_length = dataworker.get_tasks(manager.data_file_dir).length;
+
+    let to_prompt = [
+        {
+            type: 'input',
+            name: 'task_text', 
+            message: 'Task text: ',
+        },
+        {
+            type: 'input', 
+            name: 'deadline', 
+            message: 'Deadline: ',
+        },
+    ]
+
+    if (task_list_length < 9)
+        prompt(to_prompt).then((options) => {
+            // Add task with <name> and <priority>
+
+            // Extraction task text and priority
+            let task_data = [];
+            for (prop in options) {
+                task_data.push(options[prop]);
+            }
+            let task_text = task_data[0];
+            let task_deadline = String(task_data[1]).trim();
+
+            let is_deadline_correct = true;
+            let day, month, year, hours, minutes;
+            is_deadline_correct = manager.valid_deadline.test(task_deadline);
+
+            // Validation deadline
+            let date = new Date();
+            if (is_deadline_correct) {
+                day = task_deadline.replace(manager.valid_deadline, '$1');
+                if (day <= 0 || day >= 32) is_deadline_correct = false; 
+
+                month = task_deadline.replace(manager.valid_deadline, '$2') - 1;
+                if (month <= -1 || month >= 12) is_deadline_correct = false;
+
+                year = date.getUTCFullYear();
+
+                hours = task_deadline.replace(manager.valid_deadline, '$4');
+                if (hours == '') hours = null;
+                if (hours != null && (hours <= -1 || hours >= 23)) is_deadline_correct = false;
+
+                minutes = task_deadline.replace(manager.valid_deadline, '$5');
+                if (minutes == '') minutes = null;
+                if (minutes != null && (minutes <= -1 || minutes >= 60)) is_deadline_correct = false;
+            
+                // Checking if deadline < now date
+                let task_dl_date = new Date(year, month, day, hours, minutes, 0);
+                if (task_dl_date < Date.now()) is_deadline_correct = false
+            }
+
+            if (is_deadline_correct) {                
+                if (hours != null && minutes != null)
+                    task_deadline = {
+                        'year': year,
+                        'month': month,
+                        'day': day,
+                        'hours': hours,
+                        'minutes': minutes,
+                    }
+                else
+                    task_deadline = {
+                        'year': year,
+                        'month': month,
+                        'day': day,
+                        'hours': 23,
+                        'minutes': 59,
+                    }
+
+                // Create task dict
+                let task_date = Date.now();
+                let task = {
+                    'priority': 1,
+                    'text': task_text,
+                    'date': task_date,
+                    'deadline': task_deadline,
+                }
+                // Adding task to task list
+                manager.add_task(task);
+            } else {
+                manager.return_error('Invalid deadline input!')
+            }
+        })
+    else
+        manager.return_warning('You have too many tasks.');
+})
+
+// note add-note - adding some note 
+commander
+    .command('add-note')
+    .alias('an')
+    .description('Adding note.')
     .action((cmd) => {
         let task_list_length = dataworker.get_tasks(manager.data_file_dir).length;
         let to_prompt = [
@@ -61,12 +157,7 @@ commander
                 message: 'Task priority: ',
             },
         ]
-        if (cmd.dl)
-            to_prompt[1] = {
-                type: 'input',
-                name: 'deadline',
-                message: 'Deadline:',
-            }
+
         if (task_list_length < 9)
             prompt(to_prompt).then((options) => {
                 // Add task with <name> and <priority>
@@ -77,70 +168,12 @@ commander
                     task_data.push(options[prop]);
                 }
                 let task_text = task_data[0];
-
-                let task_priority;
-                if (cmd.dl) {
-                    task_priority = 3
-                } else {
-                    task_priority = String(task_data[1]);
-                    task_priority = task_priority.trim();
-                }
-
-                let task_deadline = null;
-                let is_deadline_correct = true;
-                let day, mounth, year, hours, minutes;
-                if (cmd.dl) {
-                    task_deadline = String(task_data[1]).trim();
-                    is_deadline_correct = manager.valid_deadline.test(task_deadline);
-
-                    // Validation deadline
-                    let date = new Date();
-                    if (is_deadline_correct) {
-                        day = task_deadline.replace(manager.valid_deadline, '$1');
-                        if (day <= 0 || day >= 32) is_deadline_correct = false; 
-
-                        mounth = task_deadline.replace(manager.valid_deadline, '$2') - 1;
-                        if (mounth <= -1 || mounth >= 12) is_deadline_correct = false;
-
-                        year = date.getUTCFullYear();
-
-                        hours = task_deadline.replace(manager.valid_deadline, '$4');
-                        if (hours == '') hours = null;
-                        if (hours != null && (hours <= -1 || hours >= 23)) is_deadline_correct = false;
-
-                        minutes = task_deadline.replace(manager.valid_deadline, '$5');
-                        if (minutes == '') minutes = null;
-                        if (minutes != null && (minutes <= -1 || minutes >= 60)) is_deadline_correct = false;
-                    
-                        // Checking if deadline < now date
-                        let task_dl_date = new Date(year, mounth, day, hours, minutes, 0);
-                        if (task_dl_date < Date.now()) is_deadline_correct = false
-                    }
-                }
-
-                if (((manager.valid_priority_num.exec(task_priority)) || (manager.valid_priority.exec(task_priority))) && is_deadline_correct) {
+                let task_priority = String(task_data[1]);
+                task_priority = task_priority.trim();
+               
+                if (manager.valid_priority_num.exec(task_priority) || manager.valid_priority.exec(task_priority)) {
                     if (!manager.valid_priority_num.exec(task_priority)) 
                         task_priority = manager.output_colors_name.indexOf(task_priority) + 1;
-                    
-                    if (cmd.dl)
-                        if (hours != null && minutes != null)
-                            task_deadline = {
-                                'year': year,
-                                'mounth': mounth,
-                                'day': day,
-                                'hours': hours,
-                                'minutes': minutes,
-                            }
-                        else
-                            task_deadline = {
-                                'year': year,
-                                'mounth': mounth,
-                                'day': day,
-                                'hours': 23,
-                                'minutes': 59,
-                            }
-                    else
-                        task_deadline = null;
 
                     // Create task dict
                     let task_date = Date.now();
@@ -148,19 +181,17 @@ commander
                         'priority': task_priority,
                         'text': task_text,
                         'date': task_date,
-                        'deadline': task_deadline,
+                        'deadline': null,
                     }
                     // Adding task to task list
                     manager.add_task(task);
                 } else {
-                    if (!is_deadline_correct) 
-                        manager.return_error('Invalid deadline input!')
-                    else
-                        manager.return_error('Invalid task priority!');
+                    manager.return_error('Invalid task priority!');
                 }
             })
-        else
+        else {
             manager.return_warning('You have too many tasks.');
+        }
     })
 
 // note remove <id>  -  remove from task list task with some id

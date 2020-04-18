@@ -136,22 +136,22 @@ class Manager {
         /* Classification tasks by deadline */
         let sorted_tasks = [];
         for (let t_id in task_list) {
-            let {_, mounth, day, ...other} = task_list[t_id].deadline;
-            let is_mounth_exist = false;
+            let {_, month, day, ...other} = task_list[t_id].deadline;
+            let is_month_exist = false;
 
-            let t_mounth_id
+            let t_month_id
             if (sorted_tasks)
-                for (t_mounth_id in sorted_tasks) {
-                    if (sorted_tasks[t_mounth_id].mounth == mounth) 
+                for (t_month_id in sorted_tasks) {
+                    if (sorted_tasks[t_month_id].month == month) 
                     {
-                        is_mounth_exist = true;
+                        is_month_exist = true;
                         break;
                     }
                 }
-            if (!is_mounth_exist) {
+            if (!is_month_exist) {
                 sorted_tasks.push(
                     {
-                        'mounth': mounth,
+                        'month': month,
                         'tasks': [
                             {
                                 'day': day,
@@ -165,20 +165,20 @@ class Manager {
 
                 let t_day_id;
                 for (t_day_id in sorted_tasks)
-                    if (sorted_tasks[t_mounth_id].tasks[t_day_id] == day)
+                    if (sorted_tasks[t_month_id].tasks[t_day_id] == day)
                     {
                         is_date_exist = true;
                         break;
                     }
                 if (is_date_exist) {
-                    sorted_tasks[t_mounth_id].tasks.push(
+                    sorted_tasks[t_month_id].tasks.push(
                         {                           
                             'day': day,   
                             'tasks': [ task_list[id] ]
                         }
                     )
                 } else {
-                    sorted_tasks[t_mounth_id].tasks[t_day_id].tasks.push(task_list[t_id]);
+                    sorted_tasks[t_month_id].tasks[t_day_id].tasks.push(task_list[t_id]);
                 }
             }
         }
@@ -216,7 +216,7 @@ class Manager {
                 
                 console.log(`Tasks with deadline:`)
                 for (let t_month in classified_tasks_bytime) {
-                    console.log(`• For ${this.getMonthFromNumber(classified_tasks_bytime[t_month].mounth)}: `)
+                    console.log(`• For ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)}: `)
                     for (let t_day in classified_tasks_bytime[t_month].tasks) {
                         console.log(`• • Tasks for the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th day: `);
                         classified_tasks_bytime[t_month].tasks[t_day].tasks.forEach(task => {
