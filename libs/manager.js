@@ -249,11 +249,18 @@ class Manager {
                 console.log(`   ~-~Task List~-~`);
                 this.print_blank_line(null);
                 for (let t_month in classified_tasks_bytime) {
-                    console.log(`· ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)}: `)
+                    let {r, g, b} = this.output_colors.primary;
+                    let color = this.output_colors.important;
+                    console.log(chalk.rgb(r, g, b)('· ') + 
+                        chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)
+                        (` ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)} `) + chalk.rgb(r, g, b)(':'))
                     for (let t_day in classified_tasks_bytime[t_month].tasks) {
-                        console.log(`·· by the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th number: `);
+                        color = this.output_colors.average;
+                        console.log(chalk.rgb(r, g, b)(`·· `) +
+                        chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)(` by the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th `) + 
+                        chalk.rgb(r, g, b)(':'));
                         classified_tasks_bytime[t_month].tasks[t_day].tasks.forEach(task => {
-                            console.log(`··· |${id_t}| ${task.text}`);
+                            console.log(chalk.rgb(r, g, b)(`··· |${id_t}| ${task.text}`));
                             id_t++;
                         })
                     }
@@ -267,7 +274,7 @@ class Manager {
             this.print_blank_line(null);
             let id_n = 0;
             while (id_n < tasks_nottime.length) {
-                let task_priority = task_list[id_n]['priority'];
+                let task_priority = tasks_nottime[id_n]['priority'];
                 if (task_priority == 3)
                     this.print_task(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['important'])
                 else if (task_priority == 2) 
