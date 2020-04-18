@@ -114,12 +114,9 @@ class Manager {
             )
     }
 
-    classification_tasks_on_time(task_list) {
-        /* Classification tasks by deadline */
-
+    sorting_tasks_with_dl(task_list) {
         // Sorting tasks by time, thus sorting the final array
-        for (let id in task_list) {
-            task_list.sort((a, b) => {
+        task_list.sort((a, b) => {
                 let {year, mounth, day, hours, minutes} = a.deadline;  
                 let date1 = new Date(year, mounth, day, hours, minutes, 0);
 
@@ -130,23 +127,27 @@ class Manager {
                 minutes = b.deadline.minutes;
                 let date2 = new Date(year, mounth, day, hours, minutes, 0);
 
-                return date2 - date1
-            });
-            ;
-        }
+                return date1 - date2
+        });
+        return task_list
+    }
 
-        // Classification list
+    classification_tasks_on_time(task_list) {
+        /* Classification tasks by deadline */
         let sorted_tasks = [];
         for (let t_id in task_list) {
             let {_, mounth, day, ...other} = task_list[t_id].deadline;
             let is_mounth_exist = false;
-            if (!sorted_tasks)
-                for (let t_mounth_id in sorted_tasks)
+
+            let t_mounth_id
+            if (sorted_tasks)
+                for (t_mounth_id in sorted_tasks) {
                     if (sorted_tasks[t_mounth_id].mounth == mounth) 
                     {
                         is_mounth_exist = true;
                         break;
                     }
+                }
             if (!is_mounth_exist) {
                 sorted_tasks.push(
                     {
@@ -161,31 +162,42 @@ class Manager {
                 )
             } else {
                 let is_date_exist = false;
-                for (let t_day_id in sorted_tasks)
-                    if (sorted_tasks.t_mounth_id.tasks[t_day_id] == day)
+
+                let t_day_id;
+                for (t_day_id in sorted_tasks)
+                    if (sorted_tasks[t_mounth_id].tasks[t_day_id] == day)
                     {
                         is_date_exist = true;
                         break;
                     }
-                if (!is_date_exist) {
-                    sorted_tasks.t_mounth_id.tasks.push(
+                if (is_date_exist) {
+                    sorted_tasks[t_mounth_id].tasks.push(
                         {                           
                             'day': day,   
                             'tasks': [ task_list[id] ]
                         }
                     )
                 } else {
-                    sorted_tasks.t_mounth_id.tasks.t_day_id.tasks.push(task_list[t_id]);
+                    sorted_tasks[t_mounth_id].tasks[t_day_id].tasks.push(task_list[t_id]);
                 }
             }
         }
         return sorted_tasks
     }
 
+    getMonthFromNumber(mon){
+        /* Getting month's name string from month's number id */
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        return monthNames[mon]
+      }
+
     get_task_list(sort_type) {
         /* Output all Tasks with Choiced Sort Type */
         const task_list = dataworker.get_tasks(this.data_file_dir, sort_type);
         
+        // Separetion list by 
         if (task_list.length) {
             let tasks_nottime = [];
             let tasks_bytime = [];
@@ -199,13 +211,20 @@ class Manager {
             let id = 0;
             // Output tasks with deadline
             if (tasks_bytime) {
-                tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
-                console.log(tasks_bytime);
-                for (let task in tasks_bytime) {
-                    null;
+                tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
+                let classified_tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
+                
+                console.log(`Tasks with deadline:`)
+                for (let t_month in classified_tasks_bytime) {
+                    console.log(`• For ${this.getMonthFromNumber(classified_tasks_bytime[t_month].mounth)}: `)
+                    for (let t_day in classified_tasks_bytime[t_month].tasks) {
+                        console.log(`• • Tasks for the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th day: `);
+                        classified_tasks_bytime[t_month].tasks[t_day].tasks.forEach(task => {
+                            console.log(`• • • ${task.text}`)
+                        })
+                    }
                 }
             }
-
 
             // Output tasks without deadline
             console.log();

@@ -62,11 +62,11 @@ commander
             },
         ]
         if (cmd.dl)
-            to_prompt.push({
+            to_prompt[1] = {
                 type: 'input',
                 name: 'deadline',
                 message: 'Deadline:',
-            })
+            }
         if (task_list_length < 9)
             prompt(to_prompt).then((options) => {
                 // Add task with <name> and <priority>
@@ -77,14 +77,20 @@ commander
                     task_data.push(options[prop]);
                 }
                 let task_text = task_data[0];
-                let task_priority = String(task_data[1]);
-                task_priority = task_priority.trim();
+
+                let task_priority;
+                if (cmd.dl) {
+                    task_priority = 3
+                } else {
+                    task_priority = String(task_data[1]);
+                    task_priority = task_priority.trim();
+                }
 
                 let task_deadline = null;
                 let is_deadline_correct = true;
                 let day, mounth, year, hours, minutes;
                 if (cmd.dl) {
-                    task_deadline = String(task_data[2]).trim();
+                    task_deadline = String(task_data[1]).trim();
                     is_deadline_correct = manager.valid_deadline.test(task_deadline);
 
                     // Validation deadline
