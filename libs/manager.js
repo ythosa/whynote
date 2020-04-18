@@ -121,15 +121,11 @@ class Manager {
     sorting_tasks_with_dl(task_list) {
         // Sorting tasks by time, thus sorting the final array
         task_list.sort((a, b) => {
-                let {year, mounth, day, hours, minutes} = a.deadline;  
-                let date1 = new Date(year, mounth, day, hours, minutes, 0);
+                let {'year': year1, 'month': month1, 'day': day1, 'hours': hours1, 'minutes': minutes1} = a.deadline;  
+                let date1 = new Date(year1, month1, day1, hours1, minutes1, 0);
 
-                year = b.deadline.year;
-                mounth = b.deadline.mounth;
-                day = b.deadline.mounth;
-                hours = b.deadline.hours;
-                minutes = b.deadline.minutes;
-                let date2 = new Date(year, mounth, day, hours, minutes, 0);
+                let {'year': year2, 'month': month2, 'day': day2, 'hours': hours2, 'minutes': minutes2} = b.deadline;  
+                let date2 = new Date(year2, month2, day2, hours2, minutes2, 0);
 
                 return date1 - date2
         });
@@ -168,17 +164,17 @@ class Manager {
                 let is_date_exist = false;
 
                 let t_day_id;
-                for (t_day_id in sorted_tasks)
+                for (t_day_id in sorted_tasks[t_month_id].tasks)
                     if (sorted_tasks[t_month_id].tasks[t_day_id] == day)
                     {
                         is_date_exist = true;
                         break;
                     }
-                if (is_date_exist) {
+                if (!is_date_exist) {
                     sorted_tasks[t_month_id].tasks.push(
                         {                           
                             'day': day,   
-                            'tasks': [ task_list[id] ]
+                            'tasks': [ task_list[t_id] ]
                         }
                     )
                 } else {
@@ -216,16 +212,18 @@ class Manager {
             // Output tasks with deadline
             if (tasks_bytime) {
                 tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
+                console.log(tasks_bytime)
                 let classified_tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
+                console.log(classified_tasks_bytime)
                 
                 console.log()
                 this.print_blank_line(null)
                 console.log(`   ~-~Task List~-~`)
                 this.print_blank_line(null);
                 for (let t_month in classified_tasks_bytime) {
-                    console.log(`· For ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)}: `)
+                    console.log(`· ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)}: `)
                     for (let t_day in classified_tasks_bytime[t_month].tasks) {
-                        console.log(`·· Tasks for the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th day: `);
+                        console.log(`·· by the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th number: `);
                         classified_tasks_bytime[t_month].tasks[t_day].tasks.forEach(task => {
                             console.log(`··· ${task.text}`)
                         })

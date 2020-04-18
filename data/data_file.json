@@ -6,12 +6,6 @@
       "deadline": null
    },
    {
-      "priority": "3",
-      "text": "gey",
-      "date": 1587210678376,
-      "deadline": null
-   },
-   {
       "priority": "2",
       "text": "Potencial sphere physics",
       "date": 1586689946010,
@@ -29,7 +23,7 @@
       "date": 1587205646834,
       "deadline": {
          "year": 2020,
-         "month": 4,
+         "month": 11,
          "day": "5",
          "hours": "10",
          "minutes": "30"
@@ -81,6 +75,18 @@
          "day": "11",
          "hours": "15",
          "minutes": "40"
+      }
+   },
+   {
+      "priority": 1,
+      "text": "hui",
+      "date": 1587212351065,
+      "deadline": {
+         "year": 2020,
+         "month": 4,
+         "day": "7",
+         "hours": "10",
+         "minutes": "50"
       }
    }
 ]
