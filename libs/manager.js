@@ -212,9 +212,7 @@ class Manager {
             // Output tasks with deadline
             if (tasks_bytime) {
                 tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
-                console.log(tasks_bytime)
                 let classified_tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
-                console.log(classified_tasks_bytime)
                 
                 console.log()
                 this.print_blank_line(null)
