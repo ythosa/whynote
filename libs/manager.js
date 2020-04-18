@@ -53,14 +53,18 @@ class Manager {
 
     print_blank_line(text) {
         /* Just Blank Line */
-        let i = 0;
-        let blank_line = [];
-        while (i < text.length + 3) {
-            blank_line.push('-')
-            i++;
+        if (text != null) {
+            let i = 0;
+            let blank_line = [];
+            while (i < text.length + 3) {
+                blank_line.push('-')
+                i++;
+            }
+            blank_line = blank_line.join('');
+            console.log(blank_line)
+        } else {
+            console.log('----------------------');
         }
-        blank_line = blank_line.join('');
-        console.log(blank_line)
     }
 
     return_error(e) {
@@ -214,13 +218,16 @@ class Manager {
                 tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
                 let classified_tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
                 
-                console.log(`Tasks with deadline:`)
+                console.log()
+                this.print_blank_line(null)
+                console.log(`   ~-~Task List~-~`)
+                this.print_blank_line(null);
                 for (let t_month in classified_tasks_bytime) {
-                    console.log(`• For ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)}: `)
+                    console.log(`· For ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)}: `)
                     for (let t_day in classified_tasks_bytime[t_month].tasks) {
-                        console.log(`• • Tasks for the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th day: `);
+                        console.log(`·· Tasks for the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th day: `);
                         classified_tasks_bytime[t_month].tasks[t_day].tasks.forEach(task => {
-                            console.log(`• • • ${task.text}`)
+                            console.log(`··· ${task.text}`)
                         })
                     }
                 }
@@ -228,7 +235,9 @@ class Manager {
 
             // Output tasks without deadline
             console.log();
-            this.print_blank_line('----------');
+            this.print_blank_line();
+            console.log(`   ~-~Note List~-~`)
+            this.print_blank_line(null);
             while (id < tasks_nottime.length) {
                 let task_priority = task_list[id]['priority'];
                 if (task_priority == 3)
@@ -239,7 +248,7 @@ class Manager {
                     this.print_task(id, tasks_nottime[id].text, this.output_colors['inessental'])
                 id++;
             }
-            this.print_blank_line('----------');
+            this.print_blank_line(null);
         } else 
             this.return_warning('Task list is clear. ')
         
