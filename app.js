@@ -28,10 +28,17 @@ const manager = new Manager()
 commander
     .command('list')
     .alias('l')
+    .option('-t, --tasks', 'Get list of tasks')
+    .option('-n, --notes', 'Get list of notes')
     .description('Get list of tasks.')
     .action((cmd) => {
         // Output list of tasks with selected type of sort
-        manager.get_task_list()
+        if (cmd.tasks)
+            manager.print_list('tasks')
+        else if (cmd.notes)
+            manager.print_list('notes')
+        else 
+            manager.print_list()
     })
 
 // note add-task  -  adding some task

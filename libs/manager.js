@@ -101,7 +101,7 @@ class Manager {
         this.return_success();
     }
 
-    print_task(id, task, color) {
+    print_note(id, task, color) {
         /* Print Task With Correct Selection */
         let {r, g, b} = this.output_colors.primary;
         id++; 
@@ -223,7 +223,7 @@ class Manager {
         return monthNames[mon]
       }
 
-    get_task_list() {
+    print_list(to_print=null) {
         /* Output all Tasks with Choiced Sort Type */
         const task_list = dataworker.get_tasks(this.data_file_dir, 'last');
         
@@ -237,60 +237,70 @@ class Manager {
                 else
                     tasks_bytime.push(task)
             
-            
             let id_t = 1;
             // Output tasks with deadline
-            if (tasks_bytime.length != 0) {
-                tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
-                let classified_tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
-                
-                console.log();
-                this.print_blank_line(null);
-                console.log(`   ~-~Task List~-~`);
-                this.print_blank_line(null);
-                for (let t_month in classified_tasks_bytime) {
-                    let {r, g, b} = this.output_colors.primary;
-                    let color = this.output_colors.important;
-                    console.log(chalk.rgb(r, g, b)('· ') + 
-                        chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)
-                        (` ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)} `) + chalk.rgb(r, g, b)(':'))
-                    for (let t_day in classified_tasks_bytime[t_month].tasks) {
-                        color = this.output_colors.average;
-                        console.log(chalk.rgb(r, g, b)(`·· `) +
-                        chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)(` by the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th `) + 
-                        chalk.rgb(r, g, b)(':'));
-                        classified_tasks_bytime[t_month].tasks[t_day].tasks.forEach(task => {
-                            console.log(chalk.rgb(r, g, b)(`··· |${id_t}| ${task.text}`));
-                            id_t++;
-                        })
+            if (to_print == 'tasks' || to_print == null) {
+                if (tasks_bytime.length) {
+                    tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
+                    let classified_tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
+                    
+                    console.log();
+                    this.print_blank_line(null);
+                    console.log(`   ~-~Task List~-~`);
+                    this.print_blank_line(null);
+                    for (let t_month in classified_tasks_bytime) {
+                        let {r, g, b} = this.output_colors.primary;
+                        let color = this.output_colors.important;
+                        console.log(chalk.rgb(r, g, b)('· ') + 
+                            chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)
+                            (` ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)} `) + chalk.rgb(r, g, b)(':'))
+                        for (let t_day in classified_tasks_bytime[t_month].tasks) {
+                            color = this.output_colors.average;
+                            console.log(chalk.rgb(r, g, b)(`·· `) +
+                            chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)(` by the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th `) + 
+                            chalk.rgb(r, g, b)(':'));
+                            classified_tasks_bytime[t_month].tasks[t_day].tasks.forEach(task => {
+                                console.log(chalk.rgb(r, g, b)(`··· |${id_t}| ${task.text}`));
+                                id_t++;
+                            })
+                        }
                     }
+                    this.print_blank_line(null)
+                } else {
+                    this.return_warning('Task list is clear.')
                 }
             }
 
             // Output tasks without deadline
-            console.log();
-            this.print_blank_line();
-            console.log(`   ~-~Note List~-~`)
-            this.print_blank_line(null);
-            let id_n = 0;
-            while (id_n < tasks_nottime.length) {
-                let task_priority = tasks_nottime[id_n]['priority'];
-                if (task_priority == 3)
-                    this.print_task(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['important'])
-                else if (task_priority == 2) 
-                    this.print_task(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['average'])
-                else 
-                    this.print_task(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['inessental'])
-                id_n++;
+            if (to_print == 'notes' || to_print == null) {
+                if (tasks_nottime.length) {
+                    console.log();
+                    this.print_blank_line();
+                    console.log(`   ~-~Note List~-~`)
+                    this.print_blank_line(null);
+                    let id_n = 0;
+                    while (id_n < tasks_nottime.length) {
+                        let task_priority = tasks_nottime[id_n]['priority'];
+                        if (task_priority == 3)
+                            this.print_note(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['important'])
+                        else if (task_priority == 2) 
+                            this.print_note(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['average'])
+                        else 
+                            this.print_note(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['inessental'])
+                        id_n++;
+                    }
+                    this.print_blank_line(null);
+                } else {
+                    this.return_warning('Note list is clear.')
+                }
             }
-            this.print_blank_line(null);
 
             dataworker.update_task_list(this.data_file_dir, [
                 ...tasks_bytime,
                 ...tasks_nottime
             ]);
         } else 
-            this.return_warning('Task list is clear.')
+            this.return_warning('Task/note list is clear.')
         
     }
 
