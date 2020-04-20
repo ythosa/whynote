@@ -18,7 +18,7 @@ const dataworker = require('./libs/work_with_data')
 // Set commander version and description
 // note --version|-V
 // note --help|-h
-commander.version('v1.0.0').description('Command line interface, which implements a notepad task manager.')
+commander.version('v1.0.0').description('Command line interface, which implements a notes and tasks manager.')
 
 // Create task manager
 const manager = new Manager()
@@ -28,8 +28,8 @@ const manager = new Manager()
 commander
     .command('list')
     .alias('l')
-    .option('-t, --tasks', 'Get list of tasks')
-    .option('-n, --notes', 'Get list of notes')
+    .option('-t, --tasks', 'Get list of tasks.')
+    .option('-n, --notes', 'Get list of notes.')
     .description('Get list of tasks.')
     .action((cmd) => {
         // Output list of tasks with selected type of sort
@@ -45,7 +45,7 @@ commander
 commander
 .command('add-task')
 .alias('at')
-.description('Adding task.')
+.description('Adding task to task list.')
 .action((cmd) => {
     let task_list_length = dataworker.get_tasks(manager.data_file_dir).length;
 
@@ -116,7 +116,7 @@ commander
 commander
     .command('add-note')
     .alias('an')
-    .description('Adding note.')
+    .description('Adding note to note list.')
     .action((cmd) => {
         let task_list_length = dataworker.get_tasks(manager.data_file_dir).length;
         let to_prompt = [
