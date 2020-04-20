@@ -256,10 +256,10 @@ class Manager {
 
     print_list(to_print=null) {
         /* Output all Tasks with Choiced Sort Type */
-        const task_list = dataworker.get_tasks(this.data_file_dir, 'last');
-        
-        // Separetion list by 
+    dataworker.get_tasks(this.data_file_dir, 'last').then(task_list => {
+        // Awaited promise
         if (task_list.length) {
+            // Splitting the list by deadline on `tasks_nottime` and `tasks_bytime`
             let tasks_nottime = [];
             let tasks_bytime = [];
             for (let task of task_list)
@@ -340,97 +340,118 @@ class Manager {
             ]);
         } else 
             this.return_warning('Task/note list is clear.')
-        
+    }).catch(err => {
+        // Try again
+        this.return_error(err);
+        this.print_list(to_print);
+    })
     }
 
     update_task(id, task_text, task_priority, task_deadline) {
         /* Updating Task with Id */
-        let task_list = dataworker.get_tasks(this.data_file_dir, 'last');
-        id--;
+        dataworker.get_tasks(this.data_file_dir, 'last').then(task_list => {
+            id--;
 
-        if ((this.valid_priority_num.exec(task_priority)) || (this.valid_priority.exec(task_priority) || (task_priority == '-'))) {
+            if (
+                    (this.valid_priority_num.exec(task_priority))
+                    || (this.valid_priority.exec(task_priority)
+                    || (task_priority == '-'))
+                ) {
 
-            if (task_deadline != '-') { 
-                let [is_deadline_correct, year, month, day, hours, minutes, reason_of_error] = this.validation_deadline(task_deadline)
-                if (is_deadline_correct) {
-                    task_deadline = {
-                        "year": year,
-                        "month": month,
-                        "day": day,
-                        "hours": hours,
-                        "minutes": minutes,
-                    }
-                    task_list[id].deadline = task_deadline;
-                    if (!this.valid_priority_num.exec(task_priority) && task_priority != '-') 
-                        task_priority = this.output_colors_name.indexOf(task_priority) + 1;
+                if (task_deadline != '-') { 
+                    let [
+                        is_deadline_correct, year, month, day, hours, minutes, reason_of_error
+                    ] = this.validation_deadline(task_deadline)
 
-                    if (task_text != '-')
-                        task_list[id].text = task_text;
+                    if (is_deadline_correct) {
+                        task_deadline = {
+                            "year": year,
+                            "month": month,
+                            "day": day,
+                            "hours": hours,
+                            "minutes": minutes,
+                        }
+                        task_list[id].deadline = task_deadline;
+                        if (!this.valid_priority_num.exec(task_priority) && task_priority != '-') 
+                            task_priority = this.output_colors_name.indexOf(task_priority) + 1;
 
-                    if (task_priority != '-') {
-                        if (task_priority >= 0 && task_priority <= 3) {
-                            task_list[id].priority = task_priority;
+                        if (task_text != '-')
+                            task_list[id].text = task_text;
 
+                        if (task_priority != '-') {
+                            if (task_priority >= 0 && task_priority <= 3) {
+                                task_list[id].priority = task_priority;
+
+                                dataworker.update_task_list(this.data_file_dir, task_list);
+
+                                this.return_success()
+                            } else {
+                                this.return_error('Invalid task priority!');
+                            }
+                        } else {
                             dataworker.update_task_list(this.data_file_dir, task_list);
 
                             this.return_success()
-                        } else {
-                            this.return_error('Invalid task priority!');
                         }
                     } else {
-                        dataworker.update_task_list(this.data_file_dir, task_list);
-
-                        this.return_success()
+                        this.return_error(reason_of_error);
                     }
-                } else {
-                    this.return_error(reason_of_error);
                 }
+            } else {
+                this.return_error('Ivalid priority input!')
             }
-        } else {
-            this.return_error('Ivalid priority input!')
-        }
+        }).catch(err => {
+            // Try again
+            this.return_error(err);
+            this.update_task(id, task_text, task_priority, task_deadline);
+        })
     }
 
     remove_task(id) {
         /* Removing Task with Id */
-        let task_list = dataworker.get_tasks(this.data_file_dir, 'last');
-        if (id == 'all') {
-            // Remove all tasks
-            dataworker.update_task_list(this.data_file_dir, []);
-
-            this.return_success();
-        } else if (this.valid_task_id_nums.exec(id)) {
-            // Remove task with `id`
-            id--;
-            if (id >= 0 && id < task_list.length) {
-                task_list = [
-                    ...task_list.slice(0, id),
-                    ...task_list.slice(++id)
-                ]
-                dataworker.update_task_list(this.data_file_dir, task_list);
+        dataworker.get_tasks(this.data_file_dir, 'last').then(task_list => {
+            if (id == 'all') {
+                // Remove all tasks
+                dataworker.update_task_list(this.data_file_dir, []);
 
                 this.return_success();
-            } else {
-                this.return_error('There is no task with this id!')
-            }        
-        } else if (this.valid_task_id_interval.exec(id)) {
-            // Remove tasks with `id` from `start` to `end`
-            let start = this.valid_task_id_interval.exec(id)[1] - 1;
-            let end = this.valid_task_id_interval.exec(id)[2] - 1;
-            if ((start < end) && (start < task_list.length - 1) && (end < task_list.length) && (start >= 0) && (end >= 1)) {
-                task_list = [
-                    ...task_list.slice(0, start),
-                    ...task_list.slice(end+1)
-                ]
-                dataworker.update_task_list(this.data_file_dir, task_list);
+            } else if (this.valid_task_id_nums.exec(id)) {
+                // Remove task with `id`
+                id--;
+                if (id >= 0 && id < task_list.length) {
+                    task_list = [
+                        ...task_list.slice(0, id),
+                        ...task_list.slice(++id)
+                    ]
+                    dataworker.update_task_list(this.data_file_dir, task_list);
 
-                this.return_success();
+                    this.return_success();
+                } else {
+                    this.return_error('There is no task with this id!')
+                }        
+            } else if (this.valid_task_id_interval.exec(id)) {
+                // Remove tasks with `id` from `start` to `end`
+                let start = this.valid_task_id_interval.exec(id)[1] - 1;
+                let end = this.valid_task_id_interval.exec(id)[2] - 1;
+                if ((start < end) && (start < task_list.length - 1) && (end < task_list.length) && (start >= 0) && (end >= 1)) {
+                    task_list = [
+                        ...task_list.slice(0, start),
+                        ...task_list.slice(end+1)
+                    ]
+                    dataworker.update_task_list(this.data_file_dir, task_list);
+
+                    this.return_success();
+                } else {
+                    this.return_error('Invalid id!');
+                }
             } else {
                 this.return_error('Invalid id!');
             }
-        } else {
-            this.return_error('Invalid id!');
-        }
+        }).catch(err => {
+            // Try again
+            this.return_error(err);
+            this.remove_task(id)
+        })
     }
 }
 

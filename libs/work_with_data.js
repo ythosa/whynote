@@ -1,12 +1,16 @@
 /* Saving and Updating Data File */
 
-const fs = require('fs')
+const fs = require('fs');
+const {promisify} = require('util');
+
+const readFile = promisify(fs.readFile);  // callback -> promise
 
 class DataWorker {
 
-    static get_tasks(data_dir, sort_type=null) {
+    static async get_tasks(data_dir, sort_type=null) {
         /* Get Task List from json File */
-        let task_list = fs.readFileSync(`${data_dir}`, "utf8");
+        let task_list = await readFile(`${data_dir}`, "utf8");
+
         task_list = JSON.parse(task_list);
         
         // If we need sort list
@@ -23,20 +27,24 @@ class DataWorker {
 
     static add_task(data_dir, task) {
         /* Add Task to Data File */
-        let task_list = DataWorker.get_tasks(data_dir);
-        // Update task list
-        task_list = [
-            ...task_list,
-            task,
-        ]
-        task_list = JSON.stringify(task_list, null, '   ');
-        fs.writeFileSync(data_dir, task_list, "utf8");
+        DataWorker.get_tasks(data_dir).then(task_list => {
+            // Update task list
+            task_list = [
+                ...task_list,
+                task,
+            ]
+            task_list = JSON.stringify(task_list, null, '   ');
+            fs.writeFile(data_dir, task_list, "utf8", () => {})
+        }).catch(err => {
+            // Try again
+            DataWorker.add_task(data_dir, task);
+        })
     }
 
     static update_task_list(data_dir, task_list) {
         /* Updating Task List in Data File */
         task_list = JSON.stringify(task_list, null, '   ');
-        fs.writeFileSync(data_dir, task_list, "utf8");
+        fs.writeFile(data_dir, task_list, "utf8", () => {});
     }
 }
 
