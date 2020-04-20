@@ -22,7 +22,7 @@
 <br>
 
 ### Description:
--    Command line task manager;
+-    Command line task manager and notebook;
 -    `whynote` is easy way to mark tasks, which need to be completed;
 -    It is easy to install and easy to use;
 -    It has great functionality.
@@ -34,22 +34,31 @@
 ###   Whynote's Commands:
 
    *   #### Get _whynote_ help:
-       *  `note --help|-h [command]`;
+       *  `note --help|-h [command]`.
        
    *   #### Get _whynote_ version:
-       *  `note --version|-V`;
+       *  `note --version|-V`.
        
-   *   #### Get list of tasks:
-       *  `note list|l [--sort|-S <sort_type>] `,
-       *  `--sort` flag carries out a sorting file list. Can be `priority` or `date`,
-       *  `--help|h`  -  get info about this function;
+   *   #### Get list of tasks and/or notes:
+       *  `note list|l [options] `,
+       *  Options could be:
+          *  `-n|--notes` flag carries out a output only notes,
+          *  `-t|--tasks` - output only tasks;
+       *  `--help|h`  -  get info about this function.
        
    *   #### Adding task to task list:
-       *  `note add|a`,
+       *  `note add-task|at`,
        *  You will need to enter:
-          * Task text,
-          * Task priority, that could be `important` or `3`, `average` or `2`, `inessental` or `1`;
-       *  `--help|h` flag exists to get info about this function;
+          * Task's text,
+          * Task's deadline, format is  `DD.MM [hh:mm]`;
+       *  `--help|h` flag exists to get info about this function.
+       
+   *   #### Adding note to note list:
+       *  `note add-note|an`,
+       *  You will need to enter:
+          * Note's text,
+          * Note's priority, that could be `important` or `3`, `average` or `2`, `inessental` or `1`;
+       *  `--help|h` flag exists to get info about this function.
    
    *   #### Removing task:
        *  `note remove|rv <id>`,
@@ -58,12 +67,13 @@
           * `all`, by this way you can remove all tasks from task list,
           *  `<id>` number of task number in task list,
           *  `start-end` - using this syntax you can delete tasks from id peer `start` to id peer `end`;
-       *  `--help|h`  -  get info about this method;
+       *  `--help|h`  -  get info about this method.
        
    *   #### Modification task:
        *  `note modific|mod <id>`,
-       *  Via this command you can change task's with `id` _text_ and _priority_:
-          * If you don't want to change task's _text_ or/and _priority_, you can write in following prompts: `-`;
+       *  Via this command you can change task's with `id` _text_, _priority_ and _deadline_:
+          * If you don't want to change task's properties, you can write in following prompts: `-`,
+          * If you chosen note and added to it deadline, note's priority will be reset;
        *  `--help|h`.
    
 <br>
