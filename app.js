@@ -74,7 +74,9 @@ commander
             let task_text = task_data[0];
             let task_deadline = String(task_data[1]).trim();
 
-            let [is_deadline_correct, year, month, day, hours, minutes] = manager.validation_deadline(task_deadline)
+            let [
+                is_deadline_correct, year, month, day, hours, minutes, reason_of_error
+            ] = manager.validation_deadline(task_deadline)
 
             if (is_deadline_correct) {                
                 if (hours != null && minutes != null)
@@ -105,7 +107,7 @@ commander
                 // Adding task to task list
                 manager.add_task(task);
             } else {
-                manager.return_error('Invalid deadline input!')
+                manager.return_error(reason_of_error)
             }
         })
     else

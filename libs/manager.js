@@ -121,31 +121,47 @@ class Manager {
     validation_deadline(task_deadline) {
         /* Checking whether the deadline is correct */
         let is_deadline_correct = this.valid_deadline.test(task_deadline);
+        let reason_of_error;
 
         let date = new Date();
         let year, month, day, hours, minutes;
         if (is_deadline_correct) {
             day = task_deadline.replace(this.valid_deadline, '$1');
-            if (day <= 0 || day >= 32) is_deadline_correct = false; 
+            if (day <= 0 || day >= 32) {
+                is_deadline_correct = false; 
+                reason_of_error = 'Ivalid deadline\'s day input!';
+            }
 
             month = task_deadline.replace(this.valid_deadline, '$2') - 1;
-            if (month <= -1 || month >= 12) is_deadline_correct = false;
+            if (month <= -1 || month >= 12) {
+                is_deadline_correct = false;
+                reason_of_error = 'Ivalid deadline\'s month input!';
+            }
 
             year = date.getUTCFullYear();
 
             hours = task_deadline.replace(this.valid_deadline, '$4');
             if (hours == '') hours = null;
-            if (hours != null && (hours <= -1 || hours >= 23)) is_deadline_correct = false;
+            if (hours != null && (hours <= -1 || hours >= 23)) {
+                is_deadline_correct = false;
+                reason_of_error = 'Ivalid deadline\'s hours input!';
+            }
 
             minutes = task_deadline.replace(this.valid_deadline, '$5');
             if (minutes == '') minutes = null;
-            if (minutes != null && (minutes <= -1 || minutes >= 60)) is_deadline_correct = false;
+            if (minutes != null && (minutes <= -1 || minutes >= 60)) {
+                is_deadline_correct = false;
+                reason_of_error = 'Ivalid deadline\'s minutes input!';
+            }
         
             // Checking if deadline < now date
             let task_dl_date = new Date(year, month, day, hours, minutes, 0);
-            if (task_dl_date < Date.now()) is_deadline_correct = false
+            if (task_dl_date < Date.now()) {
+                is_deadline_correct = false;
+                reason_of_error = 'The deadline of the task before today\'s date!';
+            }
         }
-        return [is_deadline_correct, year, month, day, hours, minutes]
+        return [is_deadline_correct, year, month, day, hours, minutes, reason_of_error]
     }
 
     sorting_tasks_with_dl(task_list) {
@@ -335,7 +351,7 @@ class Manager {
         if ((this.valid_priority_num.exec(task_priority)) || (this.valid_priority.exec(task_priority) || (task_priority == '-'))) {
 
             if (task_deadline != '-') { 
-                let [is_deadline_correct, year, month, day, hours, minutes] = this.validation_deadline(task_deadline)
+                let [is_deadline_correct, year, month, day, hours, minutes, reason_of_error] = this.validation_deadline(task_deadline)
                 if (is_deadline_correct) {
                     task_deadline = {
                         "year": year,
@@ -367,7 +383,7 @@ class Manager {
                         this.return_success()
                     }
                 } else {
-                    this.return_error('Ivalid deadline date input!');
+                    this.return_error(reason_of_error);
                 }
             }
         } else {
