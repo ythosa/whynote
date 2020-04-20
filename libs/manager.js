@@ -95,7 +95,7 @@ class Manager {
     }
 
     add_task(task) {
-        /* Add Task to Data File */
+        /* Adding Task to Data File */
         dataworker.add_task(this.data_file_dir, task);
 
         this.return_success();
@@ -119,9 +119,9 @@ class Manager {
     }
 
     validation_deadline(task_deadline) {
+        /* Checking whether the deadline is correct */
         let is_deadline_correct = this.valid_deadline.test(task_deadline);
 
-        // Validation deadline
         let date = new Date();
         let year, month, day, hours, minutes;
         if (is_deadline_correct) {
@@ -149,7 +149,7 @@ class Manager {
     }
 
     sorting_tasks_with_dl(task_list) {
-        // Sorting tasks by time, thus sorting the final array
+        /* Sorting tasks by time, thus sorting the final array */
         task_list.sort((a, b) => {
                 let {'year': year1, 'month': month1, 'day': day1, 'hours': hours1, 'minutes': minutes1} = a.deadline;  
                 let date1 = new Date(year1, month1, day1, hours1, minutes1, 0);
@@ -222,6 +222,21 @@ class Manager {
         ];
         return monthNames[mon]
       }
+    
+    dayNumberToString(day) {
+        /* Formatting ordinal numbers for a date */
+        let last_num = day % 10;
+        if (last_num == 1) {
+            day = `${day}'st`
+        } else if (last_num == 2) {
+            day = `${day}'nd`
+        } else if (last_num == 3) {
+            day = `${day}'rd`
+        } else {
+            day = `${day}'th`
+        }
+        return day
+    }
 
     print_list(to_print=null) {
         /* Output all Tasks with Choiced Sort Type */
@@ -251,14 +266,21 @@ class Manager {
                     for (let t_month in classified_tasks_bytime) {
                         let {r, g, b} = this.output_colors.primary;
                         let color = this.output_colors.important;
+                        // Print mounth of group of tasks
                         console.log(chalk.rgb(r, g, b)('· ') + 
                             chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)
                             (` ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)} `) + chalk.rgb(r, g, b)(':'))
                         for (let t_day in classified_tasks_bytime[t_month].tasks) {
                             color = this.output_colors.average;
-                            console.log(chalk.rgb(r, g, b)(`·· `) +
-                            chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)(` by the ${classified_tasks_bytime[t_month].tasks[t_day].day}'th `) + 
-                            chalk.rgb(r, g, b)(':'));
+                            let day_format_string = this.dayNumberToString(classified_tasks_bytime[t_month].tasks[t_day].day)
+                            // Print day of group of tasks
+                            console.log(
+                                chalk.rgb(r, g, b)(`·· `) +
+                                chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)
+                                (` by the ${day_format_string} `) + 
+                                chalk.rgb(r, g, b)(':')
+                            );
+                            // Print tasks for this day
                             classified_tasks_bytime[t_month].tasks[t_day].tasks.forEach(task => {
                                 console.log(chalk.rgb(r, g, b)(`··· |${id_t}| ${task.text}`));
                                 id_t++;
@@ -280,6 +302,7 @@ class Manager {
                     this.print_blank_line(null);
                     let id_n = 0;
                     while (id_n < tasks_nottime.length) {
+                        // Choosing note's formatting by priority
                         let task_priority = tasks_nottime[id_n]['priority'];
                         if (task_priority == 3)
                             this.print_note(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['important'])
@@ -294,7 +317,7 @@ class Manager {
                     this.return_warning('Note list is clear.')
                 }
             }
-
+            // Updating data file to arrange tasks in the correct order for further actions
             dataworker.update_task_list(this.data_file_dir, [
                 ...tasks_bytime,
                 ...tasks_nottime
@@ -353,7 +376,7 @@ class Manager {
     }
 
     remove_task(id) {
-        /* Remove Task with Id */
+        /* Removing Task with Id */
         let task_list = dataworker.get_tasks(this.data_file_dir, 'last');
         if (id == 'all') {
             // Remove all tasks
@@ -361,7 +384,7 @@ class Manager {
 
             this.return_success();
         } else if (this.valid_task_id_nums.exec(id)) {
-            // Remove task with id
+            // Remove task with `id`
             id--;
             if (id >= 0 && id < task_list.length) {
                 task_list = [
@@ -375,7 +398,7 @@ class Manager {
                 this.return_error('There is no task with this id!')
             }        
         } else if (this.valid_task_id_interval.exec(id)) {
-            // Remove tasks with id from start to end
+            // Remove tasks with `id` from `start` to `end`
             let start = this.valid_task_id_interval.exec(id)[1] - 1;
             let end = this.valid_task_id_interval.exec(id)[2] - 1;
             if ((start < end) && (start < task_list.length - 1) && (end < task_list.length) && (start >= 0) && (end >= 1)) {
