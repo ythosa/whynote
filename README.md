@@ -22,7 +22,7 @@
 <br>
 
 ### Description:
--    Command line task manager;
+-    Command line task manager and notebook;
 -    `whynote` is easy way to mark tasks, which need to be completed;
 -    It is easy to install and easy to use;
 -    It has great functionality.
@@ -40,7 +40,7 @@
        *  `note --version|-V`.
        
    *   #### Get list of tasks and/or notes:
-       *  `note list|l [oprions] `,
+       *  `note list|l [options] `,
        *  Options could be:
           *  `-n|--notes` flag carries out a output only notes,
           *  `-t|--tasks` - output only tasks;
