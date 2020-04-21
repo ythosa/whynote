@@ -5,6 +5,8 @@
   <img src="https://github.com/Ythosa/whynote/blob/master/docs_res/whynote.png">
   
   <br>
+  
+  <br>
 
   [![Badge](https://img.shields.io/badge/Uses-Node.js-green.svg?style=flat-square)](1)
   [![Badge](https://img.shields.io/badge/Open-Source-important.svg?style=flat-square)](1)
@@ -80,9 +82,10 @@
    
 <br>
 
-###   Using Example:
   <div align = "center"> 
+    <h2> :.Using Example.: </h2>
     <img src="https://github.com/Ythosa/whynote/blob/master/docs_res/using_example.gif">
   
-   #### More you can see in `docs_res` folder of this repository
+   #### More you can see in `docs_res` folder of this repository.
+   #### Thank you a lot!
   </div>
