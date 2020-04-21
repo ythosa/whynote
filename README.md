@@ -1,18 +1,20 @@
 <br>
-<h1 align="center">whynote</h1>
+
 <div align="center">
   
-<br>
+  <img src="https://github.com/Ythosa/whynote/blob/master/docs_res/whynote.png">
+  
+  <br>
 
-[![Badge](https://img.shields.io/badge/Uses-Node.js-green.svg?style=flat-square)](1)
-[![Badge](https://img.shields.io/badge/Open-Source-important.svg?style=flat-square)](1)
-[![Badge](https://img.shields.io/badge/Made_with-Love-ff69b4.svg?style=flat-square)](1)
-    
-<br>
+  [![Badge](https://img.shields.io/badge/Uses-Node.js-green.svg?style=flat-square)](1)
+  [![Badge](https://img.shields.io/badge/Open-Source-important.svg?style=flat-square)](1)
+  [![Badge](https://img.shields.io/badge/Made_with-Love-ff69b4.svg?style=flat-square)](1)
+
+  <br>
 
 </div>
 
-### Installation:
+## Installation:
 -   Install [Node.js](https://nodejs.org/en/),
 -   Clone this repo: `git clone https://github.com/Ythosa/whynote`,
 -   Install dependences by writing in console: `npm install`,
@@ -21,7 +23,7 @@
 
 <br>
 
-### Description:
+## Description:
 -    Command line task manager and notebook;
 -    `whynote` is easy way to mark tasks, which need to be completed;
 -    It is easy to install and easy to use;
@@ -78,5 +80,9 @@
    
 <br>
 
-###   Using Examples:
-   - ...
+###   Using Example:
+  <div align = "center"> 
+    <img src="https://github.com/Ythosa/whynote/blob/master/docs_res/using_example.gif">
+  
+   #### More you can see in `docs_res` folder of this repository
+  </div>
