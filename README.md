@@ -87,5 +87,5 @@
     <img src="https://github.com/Ythosa/whynote/blob/master/docs_res/using_example.gif">
   
    #### More you can see in `docs_res` folder of this repository.
-   #### Thank you a lot!
+   <i>  T h a n k s  </i> /// <i>  f o r  </i> /// <i>  w a t c h i n g  </i>!
   </div>
