@@ -132,12 +132,12 @@ commander
                 {
                     type: 'input',
                     name: 'task_text', 
-                    message: 'Task text: ',
+                    message: 'Note text: ',
                 },
                 {
                     type: 'input', 
                     name: 'task_priority', 
-                    message: 'Task priority: ',
+                    message: 'Note priority: ',
                 },
             ]
 

@@ -334,10 +334,21 @@ class Manager {
                 }
             }
             // Updating data file to arrange tasks in the correct order for further actions
-            dataworker.update_task_list(this.data_file_dir, [
-                ...tasks_bytime,
-                ...tasks_nottime
-            ]);
+            if (to_print == 'tasks') 
+                dataworker.update_task_list(this.data_file_dir, [
+                    ...tasks_bytime,
+                    ...tasks_nottime
+                ])
+            else if (to_print == 'notes') 
+                dataworker.update_task_list(this.data_file_dir, [
+                    ...tasks_nottime,
+                    ...tasks_bytime
+                ])
+            else 
+                dataworker.update_task_list(this.data_file_dir, [
+                    ...tasks_bytime,
+                    ...tasks_nottime
+                ])
         } else 
             this.return_warning('Task/note list is clear.')
     }).catch(err => {
