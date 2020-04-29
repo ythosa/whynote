@@ -1,4 +1,4 @@
-#!/usr/bin/env node  
+#!/usr/bin/env node
     // indicates that processing should be carried out NodeJS
 
 /* -*- coding: utf-8 -*- */
@@ -7,13 +7,13 @@
     // cli label: whynote
     // cli command: note
 
-/* npm link --force   -   adding module to console */    
+/* npm link --force   -   adding module to console */
 
     /* Importing dependencies */
-const commander = require('commander')
-const {prompt} = require('inquirer')
-const Manager = require('./libs/manager')
-const dataworker = require('./libs/work_with_data')
+const commander = require('commander');
+const {prompt} = require('inquirer');
+const Manager = require('./libs/manager');
+const dataworker = require('./libs/work_with_data');
 
 // Set commander version and description
 // note --version|-V
@@ -21,9 +21,9 @@ const dataworker = require('./libs/work_with_data')
 commander.version('v1.2.0').description('Command line interface, which implements a notes and tasks manager.')
 
 // Create task manager
-const manager = new Manager()
+const manager = new Manager();
 
-        /* Commander Commands */ 
+        /* Commander Commands */
 // note list [options]  -  get list of notes
 commander
     .command('list')
@@ -37,7 +37,7 @@ commander
             manager.print_list('tasks')
         else if (cmd.notes)
             manager.print_list('notes')
-        else 
+        else
             manager.print_list()
     })
 
@@ -49,16 +49,16 @@ commander
 .action((cmd) => {
     dataworker.get_tasks(manager.data_file_dir).then(task_list => {
         let task_list_length = task_list.length;
-            
+
         let to_prompt = [
             {
                 type: 'input',
-                name: 'task_text', 
+                name: 'task_text',
                 message: 'Task text: ',
             },
             {
-                type: 'input', 
-                name: 'deadline', 
+                type: 'input',
+                name: 'deadline',
                 message: 'Deadline: ',
             },
         ]
@@ -79,7 +79,7 @@ commander
                     is_deadline_correct, year, month, day, hours, minutes, reason_of_error
                 ] = manager.validation_deadline(task_deadline)
 
-                if (is_deadline_correct) {                
+                if (is_deadline_correct) {
                     if (hours != null && minutes != null)
                         task_deadline = {
                             'year': year,
@@ -119,7 +119,7 @@ commander
     })
 })
 
-// note add-note - adding some note 
+// note add-note - adding some note
 commander
     .command('add-note')
     .alias('an')
@@ -131,12 +131,12 @@ commander
             let to_prompt = [
                 {
                     type: 'input',
-                    name: 'task_text', 
+                    name: 'task_text',
                     message: 'Note text: ',
                 },
                 {
-                    type: 'input', 
-                    name: 'task_priority', 
+                    type: 'input',
+                    name: 'task_priority',
                     message: 'Note priority: ',
                 },
             ]
@@ -153,9 +153,9 @@ commander
                     let task_text = task_data[0];
                     let task_priority = String(task_data[1]);
                     task_priority = task_priority.trim();
-                
+
                     if (manager.valid_priority_num.exec(task_priority) || manager.valid_priority.exec(task_priority)) {
-                        if (!manager.valid_priority_num.exec(task_priority)) 
+                        if (!manager.valid_priority_num.exec(task_priority))
                             task_priority = manager.output_colors_name.indexOf(task_priority) + 1;
 
                         // Create task dict
@@ -190,8 +190,8 @@ commander
         // Remove task with <id>
         prompt([
             {
-                type: 'confirm', 
-                name: 'confirm', 
+                type: 'confirm',
+                name: 'confirm',
                 message: 'Are you sure? ',
             }
         ]).then((options) => {
@@ -213,17 +213,17 @@ commander
                 let to_prompt = [
                     {
                         type: 'input',
-                        name: 'task_text', 
+                        name: 'task_text',
                         message: 'Task text: ',
                     },
                     {
-                        type: 'input', 
-                        name: 'task_priority', 
+                        type: 'input',
+                        name: 'task_priority',
                         message: 'Task priority: ',
                     },
                     {
-                        type: 'input', 
-                        name: 'deadline', 
+                        type: 'input',
+                        name: 'deadline',
                         message: 'Deadline: ',
                     }
                 ]

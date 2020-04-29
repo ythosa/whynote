@@ -4,7 +4,7 @@ const chalk = require('chalk');
 const dataworker = require('./work_with_data');
 
 class Manager {
-    
+
     constructor() {
         // Valid priority of task
         this.valid_priority_num = /^[1|2|3]$/;
@@ -40,15 +40,7 @@ class Manager {
         };
 
         // Get correct file path ./data/data_file.json
-        let take_data_file_dir = () => { 
-            let data_file_dir_str = ''
-            let data_file_dir_folders = __dirname.split('\\').slice(0, __dirname.split('\\').length - 1);
-            data_file_dir_str = (data_file_dir_folders[0]+'\\');
-            data_file_dir_folders = data_file_dir_folders.slice(1);
-            data_file_dir_str = data_file_dir_str + data_file_dir_folders.join('\\') + '\\data\\data_file.json';
-            return data_file_dir_str;
-        }
-        this.data_file_dir = take_data_file_dir();  
+        this.data_file_dir = dataworker.take_data_file_dir();
 
         // Max note + task list length
         this.max_list_length = 30;
@@ -104,19 +96,20 @@ class Manager {
         this.return_success();
     }
 
+
     print_note(id, task, color) {
         /* Print Task With Correct Selection */
         let {r, g, b} = this.output_colors.primary;
-        id++; 
+        id++;
         let id_str = this.id_num2str(id)
-        
+
         if (color.bg != null)
             console.log(
                 '|' + chalk.rgb(r, g, b)(`${id_str}`) +
                 '| ' + chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b)
                 .rgb(color.text.r, color.text.g, color.text.b)(' ' + task + ' ') + '.'
             )
-        else 
+        else
             console.log(
                 '|' + chalk.rgb(r, g, b)(id_str) +
                 '| ' + chalk.rgb(color.text.r, color.text.g, color.text.b)(''+task+'.')
@@ -133,7 +126,7 @@ class Manager {
         if (is_deadline_correct) {
             day = task_deadline.replace(this.valid_deadline, '$1');
             if (day <= 0 || day >= 32) {
-                is_deadline_correct = false; 
+                is_deadline_correct = false;
                 reason_of_error = 'Ivalid deadline\'s day input!';
             }
 
@@ -158,7 +151,7 @@ class Manager {
                 is_deadline_correct = false;
                 reason_of_error = 'Ivalid deadline\'s minutes input!';
             }
-        
+
             // Checking if deadline < now date
             let task_dl_date = new Date(year, month, day, hours, minutes, 0);
             if (task_dl_date < Date.now()) {
@@ -174,10 +167,10 @@ class Manager {
     sorting_tasks_with_dl(task_list) {
         /* Sorting tasks by time, thus sorting the final array */
         task_list.sort((a, b) => {
-                let {'year': year1, 'month': month1, 'day': day1, 'hours': hours1, 'minutes': minutes1} = a.deadline;  
+                let {'year': year1, 'month': month1, 'day': day1, 'hours': hours1, 'minutes': minutes1} = a.deadline;
                 let date1 = new Date(year1, month1, day1, hours1, minutes1, 0);
 
-                let {'year': year2, 'month': month2, 'day': day2, 'hours': hours2, 'minutes': minutes2} = b.deadline;  
+                let {'year': year2, 'month': month2, 'day': day2, 'hours': hours2, 'minutes': minutes2} = b.deadline;
                 let date2 = new Date(year2, month2, day2, hours2, minutes2, 0);
 
                 return date1 - date2
@@ -195,7 +188,7 @@ class Manager {
             let t_month_id
             if (sorted_tasks)
                 for (t_month_id in sorted_tasks) {
-                    if (sorted_tasks[t_month_id].month == month) 
+                    if (sorted_tasks[t_month_id].month == month)
                     {
                         is_month_exist = true;
                         break;
@@ -225,8 +218,8 @@ class Manager {
                     }
                 if (!is_date_exist) {
                     sorted_tasks[t_month_id].tasks.push(
-                        {                           
-                            'day': day,   
+                        {
+                            'day': day,
                             'tasks': [ task_list[t_id] ]
                         }
                     )
@@ -245,7 +238,7 @@ class Manager {
         ];
         return monthNames[mon]
       }
-    
+
     dayNumberToString(day) {
         /* Formatting ordinal numbers for a date */
         let last_num = day % 10;
@@ -273,6 +266,7 @@ class Manager {
 
     print_list(to_print=null) {
         /* Output all Tasks with Choiced Sort Type */
+        
         dataworker.get_tasks(this.data_file_dir, 'last').then(task_list => {
             // Awaited promise
             // Splitting the list by deadline on `tasks_nottime` and `tasks_bytime`
@@ -293,7 +287,7 @@ class Manager {
                 if (tasks_bytime.length) {
                     tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
                     let classified_tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
-                    
+
                     console.log();
                     this.print_blank_line(null);
                     console.log(`   ~-~Task List~-~`);
@@ -302,7 +296,7 @@ class Manager {
                         let {r, g, b} = this.output_colors.primary;
                         let color = this.output_colors.important;
                         // Print mounth of group of tasks
-                        console.log(chalk.rgb(r, g, b)('· ') + 
+                        console.log(chalk.rgb(r, g, b)('· ') +
                             chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)
                             (` ${this.getMonthFromNumber(classified_tasks_bytime[t_month].month)} `) + chalk.rgb(r, g, b)(':'))
                         for (let t_day in classified_tasks_bytime[t_month].tasks) {
@@ -312,18 +306,18 @@ class Manager {
                             console.log(
                                 chalk.rgb(r, g, b)(`·· `) +
                                 chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)
-                                (` by the ${day_format_string} `) + 
+                                (` by the ${day_format_string} `) +
                                 chalk.rgb(r, g, b)(':')
                             );
                             // Print tasks for this day
                             classified_tasks_bytime[t_month].tasks[t_day].tasks.forEach(task => {
                                 let id_str = this.id_num2str(id_t);
-                                if (task.deadline.hours == 23 && task.deadline.minutes == 59) 
+                                if (task.deadline.hours == 23 && task.deadline.minutes == 59)
                                     console.log(chalk.rgb(r, g, b)(`··· |${id_str}| ${task.text}`))
                                 else
                                     console.log(
-                                        chalk.rgb(r, g, b)(`··· |${id_str}| ${task.text} `) + 
-                                        chalk.rgb(r, g, b)('̾') + 
+                                        chalk.rgb(r, g, b)(`··· |${id_str}| ${task.text} `) +
+                                        chalk.rgb(r, g, b)('̾') +
                                         chalk.rgb(r, g, b).underline(`by ${task.deadline.hours}:${task.deadline.minutes} o'clock`) +
                                         chalk.rgb(r, g, b)('̾')
                                     )
@@ -355,9 +349,9 @@ class Manager {
                         let task_priority = tasks_nottime[id_n]['priority'];
                         if (task_priority == 3)
                             this.print_note(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['important'])
-                        else if (task_priority == 2) 
+                        else if (task_priority == 2)
                             this.print_note(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['average'])
-                        else 
+                        else
                             this.print_note(id_t + id_n - 1, tasks_nottime[id_n].text, this.output_colors['inessental'])
                         id_n++;
                     }
@@ -367,17 +361,17 @@ class Manager {
                 }
             }
             // Updating data file to arrange tasks in the correct order for further actions
-            if (to_print == 'tasks') 
+            if (to_print == 'tasks')
                 dataworker.update_task_list(this.data_file_dir, [
                     ...tasks_bytime,
                     ...tasks_nottime
                 ])
-            else if (to_print == 'notes') 
+            else if (to_print == 'notes')
                 dataworker.update_task_list(this.data_file_dir, [
                     ...tasks_nottime,
                     ...tasks_bytime
                 ])
-            else 
+            else
                 dataworker.update_task_list(this.data_file_dir, [
                     ...tasks_bytime,
                     ...tasks_nottime
@@ -400,7 +394,7 @@ class Manager {
                     || (task_priority == '-'))
                 ) {
 
-                if (task_deadline != '-') { 
+                if (task_deadline != '-') {
                     let [
                         is_deadline_correct, year, month, day, hours, minutes, reason_of_error
                     ] = this.validation_deadline(task_deadline)
@@ -414,7 +408,7 @@ class Manager {
                             "minutes": minutes,
                         }
                         task_list[id].deadline = task_deadline;
-                        if (!this.valid_priority_num.exec(task_priority) && task_priority != '-') 
+                        if (!this.valid_priority_num.exec(task_priority) && task_priority != '-')
                             task_priority = this.output_colors_name.indexOf(task_priority) + 1;
 
                         if (task_text != '-')
@@ -470,7 +464,7 @@ class Manager {
                     this.return_success();
                 } else {
                     this.return_error('There is no task with this id!')
-                }        
+                }
             } else if (this.valid_task_id_interval.exec(id)) {
                 // Remove tasks with `id` from `start` to `end`
                 let start = this.valid_task_id_interval.exec(id)[1] - 1;
