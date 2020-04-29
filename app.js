@@ -63,7 +63,7 @@ commander
             },
         ]
 
-        if (task_list_length < 9)
+        if (task_list_length < manager.max_list_length)
             prompt(to_prompt).then((options) => {
                 // Add task with <name> and <priority>
 
@@ -141,7 +141,7 @@ commander
                 },
             ]
 
-            if (task_list_length < 9)
+            if (task_list_length < manager.max_list_length)
                 prompt(to_prompt).then((options) => {
                     // Add task with <name> and <priority>
 

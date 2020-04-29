@@ -49,6 +49,9 @@ class Manager {
             return data_file_dir_str;
         }
         this.data_file_dir = take_data_file_dir();  
+
+        // Max note + task list length
+        this.max_list_length = 30;
     }
 
     print_blank_line(text) {
@@ -105,15 +108,17 @@ class Manager {
         /* Print Task With Correct Selection */
         let {r, g, b} = this.output_colors.primary;
         id++; 
+        let id_str = this.id_num2str(id)
+        
         if (color.bg != null)
             console.log(
-                '|' + chalk.rgb(r, g, b)(id) +
+                '|' + chalk.rgb(r, g, b)(`${id_str}`) +
                 '| ' + chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b)
                 .rgb(color.text.r, color.text.g, color.text.b)(' ' + task + ' ') + '.'
             )
         else 
             console.log(
-                '|' + chalk.rgb(r, g, b)(id) +
+                '|' + chalk.rgb(r, g, b)(id_str) +
                 '| ' + chalk.rgb(color.text.r, color.text.g, color.text.b)(''+task+'.')
             )
     }
@@ -254,6 +259,16 @@ class Manager {
         return day
     }
 
+    id_num2str(id) {
+        let id_str = '';
+        if (id < 10) {
+            id_str = `0${id}`;
+        } else {
+            id_str = `${id}`;
+        }
+        return id_str
+    }
+
     print_list(to_print=null) {
         /* Output all Tasks with Choiced Sort Type */
     dataworker.get_tasks(this.data_file_dir, 'last').then(task_list => {
@@ -298,7 +313,14 @@ class Manager {
                             );
                             // Print tasks for this day
                             classified_tasks_bytime[t_month].tasks[t_day].tasks.forEach(task => {
-                                console.log(chalk.rgb(r, g, b)(`··· |${id_t}| ${task.text}`));
+                                let id_str = this.id_num2str(id_t);
+                                if (task.deadline.hours == 23 && task.deadline.minutes == 59) 
+                                    console.log(chalk.rgb(r, g, b)(`··· |${id_str}| ${task.text}`))
+                                else
+                                    console.log(
+                                        chalk.rgb(r, g, b)(`··· |${id_str}| ${task.text} `) + 
+                                        chalk.rgb(r, g, b).underline(`by ${task.deadline.hours}:${task.deadline.minutes} o'clock`)
+                                    )
                                 id_t++;
                             })
                         }
