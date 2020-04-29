@@ -14,8 +14,8 @@ class Manager {
         this.valid_deadline = /^(\d+)[-|\/|.](\d+)( (\d+)\:(\d{2}))?$/;
 
         // Valid task id
-        this.valid_task_id_nums = /^[0-9]$/;
-        this.valid_task_id_interval = /^([0-8])-([0-9])$/;
+        this.valid_task_id_nums = /^\d+$/;
+        this.valid_task_id_interval = /^(\d+)-(\d+)$/;
 
         // Color Palette
         this.output_colors_name = [
@@ -335,6 +335,11 @@ class Manager {
 
             // Output tasks without deadline
             if (to_print == 'notes' || to_print == null) {
+                // Sorting note list by priority
+                tasks_nottime = tasks_nottime.sort((t1, t2) => {
+                    return t1.priority < t2.priority
+                })
+                // Output note list
                 if (tasks_nottime.length) {
                     console.log();
                     this.print_blank_line();
