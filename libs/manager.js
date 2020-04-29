@@ -323,7 +323,9 @@ class Manager {
                                 else
                                     console.log(
                                         chalk.rgb(r, g, b)(`··· |${id_str}| ${task.text} `) + 
-                                        chalk.rgb(r, g, b).underline(`by ${task.deadline.hours}:${task.deadline.minutes} o'clock`)
+                                        chalk.rgb(r, g, b)('̾') + 
+                                        chalk.rgb(r, g, b).underline(`by ${task.deadline.hours}:${task.deadline.minutes} o'clock`) +
+                                        chalk.rgb(r, g, b)('̾')
                                     )
                                 id_t++;
                             })
