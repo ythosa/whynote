@@ -8,7 +8,7 @@ class Manager {
     constructor() {
         // Valid priority of task
         this.valid_priority_num = /^[1|2|3]$/;
-        this.valid_priority = /[(inessental)|(average)|(important)']/;
+        this.valid_priority = /^[(inessental)|(average)|(important)]$/;
 
         // Valid task deadline
         this.valid_deadline = /^(\d+)[-|\/|.](\d+)( (\d+)\:(\d{2}))?$/;
@@ -165,6 +165,8 @@ class Manager {
                 is_deadline_correct = false;
                 reason_of_error = 'The deadline of the task before today\'s date!';
             }
+        } else {
+            reason_of_error = `The deadline must be 'DD.MM' or 'DD.MM mm:hh'!`;
         }
         return [is_deadline_correct, year, month, day, hours, minutes, reason_of_error]
     }
