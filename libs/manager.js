@@ -271,9 +271,8 @@ class Manager {
 
     print_list(to_print=null) {
         /* Output all Tasks with Choiced Sort Type */
-    dataworker.get_tasks(this.data_file_dir, 'last').then(task_list => {
-        // Awaited promise
-        if (task_list.length) {
+        dataworker.get_tasks(this.data_file_dir, 'last').then(task_list => {
+            // Awaited promise
             // Splitting the list by deadline on `tasks_nottime` and `tasks_bytime`
             let tasks_nottime = [];
             let tasks_bytime = [];
@@ -282,7 +281,10 @@ class Manager {
                     tasks_nottime.push(task)
                 else
                     tasks_bytime.push(task)
-            
+            if (tasks_bytime.length == 0 && tasks_nottime.length == 0 && to_print == null) {
+                this.return_warning('Task and note list is empty.')
+                return 0
+            }
             let id_t = 1;
             // Output tasks with deadline
             if (to_print == 'tasks' || to_print == null) {
@@ -327,7 +329,7 @@ class Manager {
                     }
                     this.print_blank_line(null)
                 } else {
-                    this.return_warning('Task list is clear.')
+                    this.return_warning('Task list is empty.')
                 }
             }
 
@@ -352,7 +354,7 @@ class Manager {
                     }
                     this.print_blank_line(null);
                 } else {
-                    this.return_warning('Note list is clear.')
+                    this.return_warning('Note list is empty.')
                 }
             }
             // Updating data file to arrange tasks in the correct order for further actions
@@ -371,13 +373,11 @@ class Manager {
                     ...tasks_bytime,
                     ...tasks_nottime
                 ])
-        } else 
-            this.return_warning('Task/note list is clear.')
-    }).catch(err => {
-        // Try again
-        this.return_error(err);
-        this.print_list(to_print);
-    })
+        }).catch(err => {
+            // Try again
+            this.return_error(err);
+            this.print_list(to_print);
+        })
     }
 
     update_task(id, task_text, task_priority, task_deadline) {
