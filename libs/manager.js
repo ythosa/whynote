@@ -266,7 +266,7 @@ class Manager {
 
     print_list(to_print=null) {
         /* Output all Tasks with Choiced Sort Type */
-        
+
         dataworker.get_tasks(this.data_file_dir, 'last').then(task_list => {
             // Awaited promise
             // Splitting the list by deadline on `tasks_nottime` and `tasks_bytime`
@@ -388,12 +388,7 @@ class Manager {
         dataworker.get_tasks(this.data_file_dir, 'last').then(task_list => {
             id--;
 
-            if (
-                    (this.valid_priority_num.exec(task_priority))
-                    || (this.valid_priority.exec(task_priority)
-                    || (task_priority == '-'))
-                ) {
-
+            if ((this.valid_priority_num.exec(task_priority)) || (this.valid_priority.exec(task_priority) || (task_priority == '-'))) {
                 if (task_deadline != '-') {
                     let [
                         is_deadline_correct, year, month, day, hours, minutes, reason_of_error
@@ -431,6 +426,28 @@ class Manager {
                         }
                     } else {
                         this.return_error(reason_of_error);
+                    }
+                } else {
+                    if (!this.valid_priority_num.exec(task_priority) && task_priority != '-')
+                        task_priority = this.output_colors_name.indexOf(task_priority) + 1;
+
+                    if (task_text != '-')
+                        task_list[id].text = task_text;
+
+                    if (task_priority != '-') {
+                        if (task_priority >= 0 && task_priority <= 3) {
+                            task_list[id].priority = task_priority;
+
+                            dataworker.update_task_list(this.data_file_dir, task_list);
+
+                            this.return_success()
+                        } else {
+                            this.return_error('Invalid task priority!');
+                        }
+                    } else {
+                        dataworker.update_task_list(this.data_file_dir, task_list);
+
+                        this.return_success()
                     }
                 }
             } else {
