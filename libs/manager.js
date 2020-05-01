@@ -495,21 +495,24 @@ class Manager {
                 }
             }
             // Updating data file to arrange tasks in the correct order for further actions
-            // if (to_print == 'tasks')
-            //     dataworker.update_task_list(this.data_file_dir, [
-            //         ...tasks_bytime,
-            //         ...tasks_nottime
-            //     ])
-            // else if (to_print == 'notes')
-            //     dataworker.update_task_list(this.data_file_dir, [
-            //         ...tasks_nottime,
-            //         ...tasks_bytime
-            //     ])
-            // else
-            //     dataworker.update_task_list(this.data_file_dir, [
-            //         ...tasks_bytime,
-            //         ...tasks_nottime
-            //     ])
+            if (to_print == 'tasks')
+                dataworker.update_task_list(this.data_file_dir, [
+                    ...overdue_tasks,
+                    ...tasks_bytime,
+                    ...tasks_nottime
+                ])
+            else if (to_print == 'notes')
+                dataworker.update_task_list(this.data_file_dir, [
+                    ...tasks_nottime,
+                    ...overdue_tasks,
+                    ...tasks_bytime
+                ])
+            else
+                dataworker.update_task_list(this.data_file_dir, [
+                    ...overdue_tasks,
+                    ...tasks_bytime,
+                    ...tasks_nottime
+                ])
         }).catch(err => {
             // Try again
             this.return_error(err);
