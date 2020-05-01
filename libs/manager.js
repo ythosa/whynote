@@ -437,12 +437,13 @@ class Manager {
             }
 
             let id_t = 1;
+            let overdues
             // Output tasks with deadline
             if (to_print == 'tasks' || to_print == null) {
                 if (tasks_bytime.length) {
                     tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
                     let classified_tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
-                    let overdues = this.get_overdue_tasks(classified_tasks_bytime);
+                    overdues = this.get_overdue_tasks(classified_tasks_bytime);
 
                     let label = `   ~-~Overdue Task List~-~`
                     console.log();
@@ -497,20 +498,20 @@ class Manager {
             // Updating data file to arrange tasks in the correct order for further actions
             if (to_print == 'tasks')
                 dataworker.update_task_list(this.data_file_dir, [
-                    ...overdue_tasks,
-                    ...tasks_bytime,
+                    ...overdues.overdue,
+                    ...overdues.normal,
                     ...tasks_nottime
                 ])
             else if (to_print == 'notes')
                 dataworker.update_task_list(this.data_file_dir, [
                     ...tasks_nottime,
-                    ...overdue_tasks,
-                    ...tasks_bytime
+                    ...overdues.overdue,
+                    ...overdues.normal
                 ])
             else
                 dataworker.update_task_list(this.data_file_dir, [
-                    ...overdue_tasks,
-                    ...tasks_bytime,
+                    ...overdues.overdue,
+                    ...overdues.normal,
                     ...tasks_nottime
                 ])
         }).catch(err => {
