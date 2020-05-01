@@ -18,7 +18,7 @@ const dataworker = require('./libs/work_with_data');
 // Set commander version and description
 // note --version|-V
 // note --help|-h
-commander.version('v1.2.0').description('Command line interface, which implements a notes and tasks manager.')
+commander.version('v1.3.0').description('Command line interface, which implements a notes and tasks manager.')
 
 // Create task manager
 const manager = new Manager();
