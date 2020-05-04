@@ -69,7 +69,7 @@ commander
 
                 // Extraction task text and priority
                 let task_data = [];
-                for (prop in options) {
+                for (let prop in options) {
                     task_data.push(options[prop]);
                 }
                 let task_text = task_data[0];

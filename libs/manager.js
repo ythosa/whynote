@@ -178,75 +178,6 @@ class Manager {
         return task_list
     }
 
-    classification_tasks_on_time(task_list) {
-        /* Classification tasks by deadline */
-
-        // sorted_tasks = [
-        //     {
-        //         'month': <number>,
-        //         'tasks': [
-        //             'day': <number>,
-        //             'tasks': [
-        //                 <array_of_tasks>
-        //             ]
-        //         ]
-        //     },
-        //    {
-        //        ...
-        //    }
-        // ]
-
-        let sorted_tasks = [];
-        for (let t_id in task_list) {
-            let {_, month, day, ...other} = task_list[t_id].deadline;
-            let is_month_exist = false;
-
-            let t_month_id
-            if (sorted_tasks)
-                for (t_month_id in sorted_tasks) {
-                    if (sorted_tasks[t_month_id].month == month)
-                    {
-                        is_month_exist = true;
-                        break;
-                    }
-                }
-            if (!is_month_exist) {
-                sorted_tasks.push(
-                    {
-                        'month': month,
-                        'tasks': [
-                            {
-                                'day': day,
-                                'tasks': [ task_list[t_id] ]
-                            }
-                        ]
-                    }
-                )
-            } else {
-                let is_date_exist = false;
-
-                let t_day_id;
-                for (t_day_id in sorted_tasks[t_month_id].tasks)
-                    if (sorted_tasks[t_month_id].tasks[t_day_id].day == day)
-                    {
-                        is_date_exist = true;
-                        break;
-                    }
-                if (!is_date_exist) {
-                    sorted_tasks[t_month_id].tasks.push(
-                        {
-                            'day': day,
-                            'tasks': [ task_list[t_id] ]
-                        }
-                    )
-                } else {
-                    sorted_tasks[t_month_id].tasks[t_day_id].tasks.push(task_list[t_id]);
-                }
-            }
-        }
-        return sorted_tasks
-    }
-
     getMonthFromNumber(mon){
         /* Getting month's name string from month's number id */
         const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -280,102 +211,104 @@ class Manager {
         return id_str
     }
 
-    get_overdue_tasks(task_list) {
-        /* Returns overdue by date tasks and valid tasks */
-        let overdue_tasks = [];
-        let normal_tasks = [];
+    classification_task_list(tasks) {
+        /* Returns Task List and Overdue Tasks */
 
-        let curr_date = new Date();
-        let task_date;
-        let year = curr_date.getUTCFullYear();
-        let month, day;
-        for (let m_id in task_list) {
-            month = task_list[m_id].month;
-            for (let d_id in task_list[m_id].tasks) {
-                day = task_list[m_id].tasks[d_id].day
-                task_date = new Date(year, month, day, 23, 59, 59)
-                if (task_date < curr_date) {
-                    // Push to overdue tasks
-                    let is_month_exist = false;
-                    let is_exist_m_id;
-                    for (is_exist_m_id in overdue_tasks) {
-                        if (overdue_tasks[is_exist_m_id].month == month) {
-                            is_month_exist = true;
-                            break;
-                        }
-                    }
-                    if (is_month_exist) {
-                        let is_day_exist = false;
-                        let is_exist_d_id;
-                        for (is_exist_d_id in overdue_tasks[is_exist_m_id].tasks) {
-                            if (overdue_tasks[is_exist_m_id].tasks[is_exist_d_id].day == day) {
-                                is_day_exist = true
-                                break
-                            }
-                        }
-                        if (is_day_exist) {
-                            overdue_tasks[is_exist_m_id].tasks[is_exist_d_id].tasks.push(task_list[m_id].tasks[d_id].tasks)
-                        } else {
-                            overdue_tasks[is_exist_m_id].tasks.push({
-                                'day': day,
-                                'tasks': task_list[m_id].tasks[d_id].tasks
-                            })
-                        }
-                    } else {
-                        overdue_tasks.push({
-                            'month': month,
-                            'tasks': [
-                                {
-                                    'day': day,
-                                    'tasks': task_list[m_id].tasks[d_id].tasks
-                                }
-                            ]
-                        })
-                    }
-                } else {
-                    // Push to normal tasks
-                    let is_month_exist = false;
-                    let is_exist_m_id;
-                    for (is_exist_m_id in normal_tasks) {
-                        if (normal_tasks[is_exist_m_id].month == month) {
-                            is_month_exist = true;
-                            break;
-                        }
-                    }
-                    if (is_month_exist) {
-                        let is_day_exist = false;
-                        let is_exist_d_id;
-                        for (is_exist_d_id in normal_tasks[is_exist_m_id].tasks) {
-                            if (normal_tasks[is_exist_m_id].tasks[is_exist_d_id].day == day) {
-                                is_day_exist = true
-                                break
-                            }
-                        }
-                        if (is_day_exist) {
-                            normal_tasks[is_exist_m_id].tasks[is_exist_d_id].tasks.push(task_list[m_id].tasks[d_id].tasks)
-                        } else {
-                            normal_tasks[is_exist_m_id].tasks.push({
-                                'day': day,
-                                'tasks': task_list[m_id].tasks[d_id].tasks
-                            })
-                        }
-                    } else {
-                        normal_tasks.push({
-                            'month': month,
-                            'tasks': [
-                                {
-                                    'day': day,
-                                    'tasks': task_list[m_id].tasks[d_id].tasks
-                                }
-                            ]
-                        })
+        let valid_tasks = {
+            'tasks': [],
+            'to_print': []
+        }
+
+        let overdue_tasks = {
+            'tasks': [],
+            'to_print': []
+        }
+
+        /* To_Print Classified Tasks Template */
+        // to_print_template = [
+        //     {
+        //         'month': <number>,
+        //         'tasks': [
+        //             'day': <number>,
+        //             'tasks': [
+        //                 <array_of_tasks>
+        //             ]
+        //         ]
+        //     },
+        //    {
+        //        ...
+        //    }
+        // ]
+
+        let classif_pusher = (tasks, task, month, day) => {
+            let classified_tasks = tasks.to_print;
+            let data_tasks = tasks.tasks;
+            data_tasks.push(task);
+
+            let is_month_exist = false;
+            let t_month_id;
+
+            if (classified_tasks)
+                for (t_month_id in classified_tasks) {
+                    if (classified_tasks[t_month_id].month == month)
+                    {
+                        is_month_exist = true;
+                        break;
                     }
                 }
+            if (!is_month_exist) {
+                classified_tasks.push(
+                    {
+                        'month': month,
+                        'tasks': [
+                            {
+                                'day': day,
+                                'tasks': [ task ]
+                            }
+                        ]
+                    }
+                )
+            } else {
+                let is_date_exist = false;
+
+                let t_day_id;
+                for (t_day_id in classified_tasks[t_month_id].tasks)
+                    if (classified_tasks[t_month_id].tasks[t_day_id].day == day)
+                    {
+                        is_date_exist = true;
+                        break;
+                    }
+                if (!is_date_exist) {
+                    classified_tasks[t_month_id].tasks.push(
+                        {
+                            'day': day,
+                            'tasks': [ task ]
+                        }
+                    )
+                } else {
+                    classified_tasks[t_month_id].tasks[t_day_id].tasks.push(task);
+                }
+            }
+
+            return {
+                "tasks": data_tasks,
+                "to_print": classified_tasks,
+            }
+        }
+
+        let current_date = new Date()
+        for (let t_id in tasks) {
+            let {year, month, day, ...other} = tasks[t_id].deadline;
+            let task_date = new Date(year, month, day, 23, 59, 59);
+            if (task_date < current_date) {
+                overdue_tasks = classif_pusher(overdue_tasks, tasks[t_id], month, day)
+            } else {
+                valid_tasks = classif_pusher(valid_tasks, tasks[t_id], month, day)
             }
         }
         return {
-            'overdue': overdue_tasks,
-            'normal': normal_tasks
+            "overdue_tasks": overdue_tasks,
+            "valid_tasks": valid_tasks
         }
     }
 
@@ -437,28 +370,33 @@ class Manager {
             }
 
             let id_t = 1;
+            let overdue_tasks, valid_tasks
             // Output tasks with deadline
             if (to_print == 'tasks' || to_print == null) {
                 if (tasks_bytime.length) {
                     tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
-                    let classified_tasks_bytime = this.classification_tasks_on_time(tasks_bytime);
-                    let overdues = this.get_overdue_tasks(classified_tasks_bytime);
-                    console.log(overdues)
+                    tasks_bytime = this.classification_task_list(tasks_bytime);
+                    overdue_tasks = tasks_bytime.overdue_tasks;
+                    valid_tasks = tasks_bytime.valid_tasks;
 
-                    let label = `   ~-~Overdue Task List~-~`
+                    // Print overdue task list
+                    if (overdue_tasks.to_print.length) {
+                        let label = `   ~-~Overdue Task List~-~`
+                        console.log();
+                        this.print_blank_line(label);
+                        console.log(label);
+                        this.print_blank_line(label);
+                        id_t = this.print_task_list(overdue_tasks.to_print, id_t)
+                        this.print_blank_line(label)
+                    }
+
+                    // Print valid task list
+                    let label = `   ~-~Task List~-~`
                     console.log();
                     this.print_blank_line(label);
                     console.log(label);
                     this.print_blank_line(label);
-                    id_t = this.print_task_list(overdues.overdue, id_t)
-                    this.print_blank_line(label)
-
-                    label = `   ~-~Task List~-~`
-                    console.log();
-                    this.print_blank_line(label);
-                    console.log(label);
-                    this.print_blank_line(label);
-                    id_t = this.print_task_list(overdues.normal, id_t)
+                    id_t = this.print_task_list(valid_tasks.to_print, id_t)
                     this.print_blank_line(label)
                 } else {
                     this.return_warning('Task list is empty.')
@@ -498,17 +436,20 @@ class Manager {
             // Updating data file to arrange tasks in the correct order for further actions
             if (to_print == 'tasks')
                 dataworker.update_task_list(this.data_file_dir, [
-                    ...tasks_bytime,
+                    ...overdue_tasks.tasks,
+                    ...valid_tasks.tasks,
                     ...tasks_nottime
                 ])
             else if (to_print == 'notes')
                 dataworker.update_task_list(this.data_file_dir, [
                     ...tasks_nottime,
-                    ...tasks_bytime,
+                    ...overdue_tasks.tasks,
+                    ...valid_tasks.tasks,
                 ])
             else
                 dataworker.update_task_list(this.data_file_dir, [
-                    ...tasks_bytime,
+                    ...overdue_tasks.tasks,
+                    ...valid_tasks.tasks,
                     ...tasks_nottime
                 ])
         }).catch(err => {
