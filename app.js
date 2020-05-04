@@ -30,6 +30,7 @@ commander
     .alias('l')
     .option('-t, --tasks', 'Get list of tasks.')
     .option('-n, --notes', 'Get list of notes.')
+    .option('-o, --overdue', 'Get list of overdue tasks')
     .description('Get list of tasks.')
     .action((cmd) => {
         // Output list of tasks with selected type of sort
@@ -37,6 +38,8 @@ commander
             manager.print_list('tasks')
         else if (cmd.notes)
             manager.print_list('notes')
+        else if (cmd.overdue)
+            manager.print_list('overdue')
         else
             manager.print_list()
     })

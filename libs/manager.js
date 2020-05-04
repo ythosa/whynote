@@ -370,16 +370,16 @@ class Manager {
             }
 
             let id_t = 1;
-            let overdue_tasks, valid_tasks
+            let overdue_tasks = null, valid_tasks = null;
             // Output tasks with deadline
-            if (to_print == 'tasks' || to_print == null) {
-                if (tasks_bytime.length) {
-                    tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
-                    tasks_bytime = this.classification_task_list(tasks_bytime);
-                    overdue_tasks = tasks_bytime.overdue_tasks;
-                    valid_tasks = tasks_bytime.valid_tasks;
+            if (to_print == 'tasks' || to_print == 'overdue' || to_print == null) {
+                tasks_bytime = this.sorting_tasks_with_dl(tasks_bytime);
+                tasks_bytime = this.classification_task_list(tasks_bytime);
+                overdue_tasks = tasks_bytime.overdue_tasks;
+                valid_tasks = tasks_bytime.valid_tasks;
 
-                    // Print overdue task list
+                // Print overdue task list
+                if (to_print == 'overdue' || to_print == 'tasks')
                     if (overdue_tasks.to_print.length) {
                         let label = `   ~-~Overdue Task List~-~`
                         console.log();
@@ -388,19 +388,22 @@ class Manager {
                         this.print_blank_line(label);
                         id_t = this.print_task_list(overdue_tasks.to_print, id_t)
                         this.print_blank_line(label)
-                    }
+                    } else
+                        if (to_print == 'overdue')
+                            this.return_warning('Overdue task list is empty.')
 
-                    // Print valid task list
-                    let label = `   ~-~Task List~-~`
-                    console.log();
-                    this.print_blank_line(label);
-                    console.log(label);
-                    this.print_blank_line(label);
-                    id_t = this.print_task_list(valid_tasks.to_print, id_t)
-                    this.print_blank_line(label)
-                } else {
-                    this.return_warning('Task list is empty.')
-                }
+                // Print valid task list
+                if (to_print != 'overdue')
+                    if (valid_tasks.to_print.length) {
+                        let label = `   ~-~Task List~-~`
+                        console.log();
+                        this.print_blank_line(label);
+                        console.log(label);
+                        this.print_blank_line(label);
+                        id_t = this.print_task_list(valid_tasks.to_print, id_t)
+                        this.print_blank_line(label)
+                    } else
+                        this.return_warning('Task list is empty.')
             }
 
             // Output tasks without deadline
@@ -434,24 +437,52 @@ class Manager {
                 }
             }
             // Updating data file to arrange tasks in the correct order for further actions
-            if (to_print == 'tasks')
-                dataworker.update_task_list(this.data_file_dir, [
-                    ...overdue_tasks.tasks,
-                    ...valid_tasks.tasks,
-                    ...tasks_nottime
-                ])
+            if (to_print == 'tasks' || to_print == 'overdue' || to_print == null)
+                if (overdue_tasks == null)
+                    if (valid_tasks == null)
+                        dataworker.update_task_list(this.data_file_dir, [
+                            ...tasks_nottime
+                        ])
+                    else
+                        dataworker.update_task_list(this.data_file_dir, [
+                            ...valid_tasks.tasks,
+                            ...tasks_nottime
+                        ])
+                else
+                    if (valid_tasks == null)
+                        dataworker.update_task_list(this.data_file_dir, [
+                            ...overdue_tasks.tasks,
+                            ...tasks_nottime
+                        ])
+                    else
+                        dataworker.update_task_list(this.data_file_dir, [
+                            ...overdue_tasks.tasks,
+                            ...valid_tasks.tasks,
+                            ...tasks_nottime
+                        ])
             else if (to_print == 'notes')
-                dataworker.update_task_list(this.data_file_dir, [
-                    ...tasks_nottime,
-                    ...overdue_tasks.tasks,
-                    ...valid_tasks.tasks,
-                ])
-            else
-                dataworker.update_task_list(this.data_file_dir, [
-                    ...overdue_tasks.tasks,
-                    ...valid_tasks.tasks,
-                    ...tasks_nottime
-                ])
+                if (overdue_tasks == null)
+                    if (valid_tasks == null)
+                        dataworker.update_task_list(this.data_file_dir, [
+                            ...tasks_nottime
+                        ])
+                    else
+                        dataworker.update_task_list(this.data_file_dir, [
+                            ...tasks_nottime,
+                            ...valid_tasks.tasks
+                        ])
+                else
+                    if (valid_tasks == null)
+                        dataworker.update_task_list(this.data_file_dir, [
+                            ...tasks_nottime,
+                            ...overdue_tasks.tasks
+                        ])
+                    else
+                        dataworker.update_task_list(this.data_file_dir, [
+                            ...tasks_nottime,
+                            ...overdue_tasks.tasks,
+                            ...valid_tasks.tasks
+                        ])
         }).catch(err => {
             // Try again
             this.return_error(err);
