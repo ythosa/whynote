@@ -233,7 +233,7 @@ commander
                 prompt(to_prompt).then(options => {
                     // Update task with <task_text> and <task_priority>
                     let task_data = [];
-                    for (prop in options) {
+                    for (let prop in options) {
                         task_data.push(options[prop]);
                     }
                     let task_text = task_data[0];
@@ -249,6 +249,18 @@ commander
             // Print error
             manager.return_error(err);
         })
+    })
+
+// note clear <list_name>  -  Clear the some list
+commander
+    .command('clear <list_name>')
+    .alias('cl')
+    .description('Clear the list with the name of the input list')
+    .action((list_name, cmd) => {
+        if (manager.lists_names.test(list_name))
+            manager.clear_list(list_name)
+        else
+            manager.return_error('Invalid list name!')
     })
 
 commander.parse(process.argv)  // Take array of string for parsing

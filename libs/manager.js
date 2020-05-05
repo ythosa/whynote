@@ -44,6 +44,9 @@ class Manager {
 
         // Max note + task list length
         this.max_list_length = 30;
+
+        // Lists names
+        this.lists_names = /^(overdue-list)|(task-list)|(note-list)$/;
     }
 
     print_blank_line(text) {
@@ -349,6 +352,40 @@ class Manager {
         return id_t
     }
 
+    async get_groups_of_tasks() {
+        /* Return tasks by groups: notes, tasks, overdue tasks */
+        let task_list;
+        try {
+            task_list = await dataworker.get_tasks(this.data_file_dir)
+        } catch(err) {
+            this.return_error(err);
+            await this.get_groups_of_tasks();
+        }
+
+        let nlist = [];
+        let tlist = [];
+        let olist = [];
+
+        // Splitting the list by deadline on `tasks_nottime` and `tasks_bytime`
+        for (let task of task_list)
+            if (task.deadline == null)
+                nlist.push(task)
+            else
+                tlist.push(task)
+
+        task_list = this.sorting_tasks_with_dl(tlist);
+        task_list = this.classification_task_list(task_list);
+
+        olist = task_list.overdue_tasks.tasks;
+        tlist = task_list.valid_tasks.tasks;
+
+        return {
+            'overdue_list': olist,
+            'task_list': tlist,
+            'note_list': nlist
+        }
+    }
+
     print_list(to_print=null) {
         /* Output all Tasks with Choiced Sort Type */
 
@@ -436,6 +473,7 @@ class Manager {
                     this.return_warning('Note list is empty.')
                 }
             }
+
             // Updating data file to arrange tasks in the correct order for further actions
             if (to_print == 'tasks' || to_print == 'overdue' || to_print == null)
                 if (overdue_tasks == null)
@@ -612,6 +650,31 @@ class Manager {
             this.return_error(err);
             this.remove_task(id)
         })
+    }
+
+    async clear_list(list_name) {
+        /* Clear list of tasks with <list_name> */
+
+        let {'overdue_list': olist, 'task_list': tlist, 'note_list': nlist} = await this.get_groups_of_tasks();
+        let list;
+        if (list_name === 'overdue-list')
+            list = [
+                ...tlist,
+                ...nlist
+            ]
+        else if (list_name === 'task-list')
+            list = [
+                ...olist,
+                ...nlist
+            ]
+        else if (list_name === 'note-list')
+            list = [
+                ...olist,
+                ...tlist
+            ]
+        dataworker.update_task_list(this.data_file_dir, list);
+
+        this.return_success()
     }
 }
 

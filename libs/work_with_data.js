@@ -45,7 +45,7 @@ class DataWorker {
     static update_task_list(data_dir, task_list) {
         /* Updating Task List in Data File */
         task_list = JSON.stringify(task_list, null, '   ');
-        fs.writeFile(data_dir, task_list, "utf8", () => {});
+        fs.writeFileSync(data_dir, task_list)
     }
 
     static take_data_file_dir() {
