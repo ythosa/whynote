@@ -47,7 +47,8 @@
        *  `note list|l [options] `,
        *  Options could be:
           *  `-n|--notes` flag carries out a output only notes,
-          *  `-t|--tasks` - output only tasks;
+          *  `-t|--tasks` - output only tasks,
+          *  `-o|--overdue` - output overdue task list;
        *  `--help|h`  -  get info about this function.
        
    *   #### Adding task to task list:
@@ -78,6 +79,15 @@
        *  Via this command you can change task's with `id` _text_, _priority_ and _deadline_:
           * If you don't want to change task's properties, you can write in following prompts: `-`,
           * If you chosen note and added to it deadline, note's priority will be reset;
+       *  `--help|h`.
+    
+   *   #### Clear some list:
+       *  `note clear <list_name>`,
+       *  Via this command you can clear the list with the name of the input list - `list_name`;
+       *  `list name` can be: 
+          * overdue-list  -  to clear overdue task list,
+          * task-list  -  to clear task list,
+          * note-list  -  to clear note-list
        *  `--help|h`.
    
 <br>
