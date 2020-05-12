@@ -6,7 +6,7 @@ const os = require('os');
 
 const readFile = promisify(fs.readFile);  // callback -> promise
 
-class DataWorker {
+class Dataworker {
 
     static async get_tasks(data_dir, sort_type=null) {
         /* Get Task List from json File */
@@ -28,7 +28,7 @@ class DataWorker {
 
     static add_task(data_dir, task) {
         /* Add Task to Data File */
-        DataWorker.get_tasks(data_dir).then(task_list => {
+        Dataworker.get_tasks(data_dir).then(task_list => {
             // Update task list
             task_list = [
                 ...task_list,
@@ -38,7 +38,7 @@ class DataWorker {
             fs.writeFile(data_dir, task_list, "utf8", () => {})
         }).catch(err => {
             // Try again
-            DataWorker.add_task(data_dir, task);
+            Dataworker.add_task(data_dir, task);
         })
     }
 
@@ -67,4 +67,4 @@ class DataWorker {
     }
 }
 
-module.exports = DataWorker;
+module.exports = Dataworker;

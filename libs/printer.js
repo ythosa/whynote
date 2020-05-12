@@ -1,3 +1,6 @@
+const chalk = require('chalk');
+const Tokens = require('./tokens');
+
 class Printer {
 
     static print_blank_line(text) {
@@ -35,7 +38,7 @@ class Printer {
     }
 
     static return_success() {
-        /* Return Seccess of Operation */
+        /* Return Success of Operation */
         let text = `    Success! `;
         console.log();
         this.print_blank_line(text);
@@ -45,7 +48,7 @@ class Printer {
 
     static print_note(id, task, color) {
         /* Print Task With Correct Selection */
-        let {r, g, b} = this.output_colors.primary;
+        let {r, g, b} = Tokens.output_colors.primary;
         id++;
         let id_str = this.id_num2str(id)
 
@@ -97,14 +100,14 @@ class Printer {
 
     static print_task_list(tlist, id_t) {
         for (let t_month in tlist) {
-            let {r, g, b} = this.output_colors.primary;
-            let color = this.output_colors.important;
+            let {r, g, b} = Tokens.output_colors.primary;
+            let color = Tokens.output_colors.important;
             // Print mounth of group of tasks
             console.log(chalk.rgb(r, g, b)('· ') +
                 chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)
                 (` ${this.getMonthFromNumber(tlist[t_month].month)} `) + chalk.rgb(r, g, b)(':'))
             for (let t_day in tlist[t_month].tasks) {
-                color = this.output_colors.average;
+                color = Tokens.output_colors.average;
                 let day_format_string = this.dayNumberToString(tlist[t_month].tasks[t_day].day)
                 // Print day of group of tasks
                 console.log(

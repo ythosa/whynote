@@ -1,11 +1,16 @@
+const Dataworker = require('./dataworker');
+const Tokens = require('./tokens');
+const Printer = require('./printer');
+
 class Classifier {
+
     static async get_groups_of_tasks() {
         /* Return tasks by groups: notes, tasks, overdue tasks */
         let task_list;
         try {
-            task_list = await dataworker.get_tasks(this.data_file_dir)
+            task_list = await Dataworker.get_tasks(Tokens.data_file_dir)
         } catch(err) {
-            this.return_error(err);
+            Printer.return_error(err);
             await this.get_groups_of_tasks();
         }
 
@@ -20,8 +25,8 @@ class Classifier {
             else
                 tlist.push(task)
 
-        task_list = this.sorting_tasks_with_dl(tlist);
-        task_list = this.classification_task_list(task_list);
+        task_list = Classifier.sorting_tasks_with_dl(tlist);
+        task_list = Classifier.classification_task_list(task_list);
 
         olist = task_list.overdue_tasks.tasks;
         tlist = task_list.valid_tasks.tasks;
@@ -145,6 +150,7 @@ class Classifier {
         });
         return task_list
     }
+
 }
 
 module.exports = Classifier;

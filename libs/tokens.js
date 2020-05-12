@@ -1,4 +1,7 @@
+const Dataworker = require('./dataworker');
+
 class Tokens {
+
     static valid_priority_num = /^[1|2|3]$/;
     static valid_priority = /^[(inessential)|(average)|(important)]$/;
     static valid_deadline = /^(\d+)[-|\/|.](\d+)( (\d+)\:(\d{2}))?$/;
@@ -27,7 +30,7 @@ class Tokens {
         primary: {r: 211, g: 201, b:237},
     };
 
-    static data_file_dir = dataworker.take_data_file_dir();
+    static data_file_dir = Dataworker.take_data_file_dir();
 
     static max_list_length = 30;
 
@@ -80,6 +83,7 @@ class Tokens {
         }
         return [is_deadline_correct, year, month, day, hours, minutes, reason_of_error]
     }
+
 }
 
 module.exports = Tokens;

@@ -12,16 +12,17 @@
     /* Importing dependencies */
 const commander = require('commander');
 const {prompt} = require('inquirer');
+
 const Manager = require('./libs/manager');
-const dataworker = require('./libs/dataworker');
+const Dataworker = require('./libs/dataworker');
+const Printer = require('./libs/printer');
+const Tokens = require('./libs/tokens');
+const Classifier = require('./libs/classifier');
 
 // Set commander version and description
 // note --version|-V
 // note --help|-h
 commander.version('v1.3.0').description('Command line interface, which implements a notes and tasks manager.')
-
-// Create task manager
-const manager = new Manager();
 
         /* Commander Commands */
 // note list [options]  -  get list of notes
@@ -35,13 +36,13 @@ commander
     .action((cmd) => {
         // Output list of tasks with selected type of sort
         if (cmd.tasks)
-            manager.print_list('tasks')
+            Manager.print_list('tasks')
         else if (cmd.notes)
-            manager.print_list('notes')
+            Manager.print_list('notes')
         else if (cmd.overdue)
-            manager.print_list('overdue')
+            Manager.print_list('overdue')
         else
-            manager.print_list()
+            Manager.print_list()
     })
 
 // note add-task  -  adding some task
@@ -50,7 +51,7 @@ commander
 .alias('at')
 .description('Adding task to task list.')
 .action((cmd) => {
-    dataworker.get_tasks(manager.data_file_dir).then(task_list => {
+    Dataworker.get_tasks(Tokens.data_file_dir).then(task_list => {
         let task_list_length = task_list.length;
 
         let to_prompt = [
@@ -66,7 +67,7 @@ commander
             },
         ]
 
-        if (task_list_length < manager.max_list_length)
+        if (task_list_length < Tokens.max_list_length)
             prompt(to_prompt).then((options) => {
                 // Add task with <name> and <priority>
 
@@ -80,7 +81,7 @@ commander
 
                 let [
                     is_deadline_correct, year, month, day, hours, minutes, reason_of_error
-                ] = manager.validation_deadline(task_deadline)
+                ] = Tokens.validation_deadline(task_deadline)
 
                 if (is_deadline_correct) {
                     if (hours != null && minutes != null)
@@ -109,16 +110,16 @@ commander
                         'deadline': task_deadline,
                     }
                     // Adding task to task list
-                    manager.add_task(task);
+                    Manager.add_task(task);
                 } else {
-                    manager.return_error(reason_of_error)
+                    Manager.return_error(reason_of_error)
                 }
             })
         else
-            manager.return_warning('You have too many tasks.');
+            Printer.return_warning('You have too many tasks.');
     }).catch(err => {
         // Print error
-        manager.return_error(err);
+        Printer.return_error(err);
     })
 })
 
@@ -128,7 +129,7 @@ commander
     .alias('an')
     .description('Adding note to note list.')
     .action((cmd) => {
-        dataworker.get_tasks(manager.data_file_dir).then(task_list => {
+        Dataworker.get_tasks(Tokens.data_file_dir).then(task_list => {
             let task_list_length = task_list.length;
 
             let to_prompt = [
@@ -144,7 +145,7 @@ commander
                 },
             ]
 
-            if (task_list_length < manager.max_list_length)
+            if (task_list_length < Tokens.max_list_length)
                 prompt(to_prompt).then((options) => {
                     // Add task with <name> and <priority>
 
@@ -157,9 +158,9 @@ commander
                     let task_priority = String(task_data[1]);
                     task_priority = task_priority.trim();
 
-                    if (manager.valid_priority_num.exec(task_priority) || manager.valid_priority.exec(task_priority)) {
-                        if (!manager.valid_priority_num.exec(task_priority))
-                            task_priority = manager.output_colors_name.indexOf(task_priority) + 1;
+                    if (Tokens.valid_priority_num.exec(task_priority) || Tokens.valid_priority.exec(task_priority)) {
+                        if (!Tokens.valid_priority_num.exec(task_priority))
+                            task_priority = Tokens.output_colors_name.indexOf(task_priority) + 1;
 
                         // Create task dict
                         let task_date = Date.now();
@@ -170,17 +171,17 @@ commander
                             'deadline': null,
                         }
                         // Adding task to task list
-                        manager.add_task(task);
+                        Manager.add_task(task);
                     } else {
-                        manager.return_error('Invalid task priority!');
+                        Printer.return_error('Invalid task priority!');
                     }
                 })
             else {
-                manager.return_warning('You have too many tasks.');
+                Printer.return_warning('You have too many tasks.');
             }
         }).catch(err => {
             // Print error
-            manager.return_error(err);
+            Printer.return_error(err);
         })
     })
 
@@ -199,7 +200,7 @@ commander
             }
         ]).then((options) => {
             if (options.confirm)
-                manager.remove_task(id);
+                Manager.remove_task(id);
         })
     })
 
@@ -209,7 +210,7 @@ commander
     .alias('mod')
     .description('Modification task: text and priority with <id>.')
     .action((id, cmd) => {
-        dataworker.get_tasks(manager.data_file_dir).then(task_list => {
+        Dataworker.get_tasks(Tokens.data_file_dir).then(task_list => {
             let task_list_length = task_list.length;
 
             if (id >= 1 && id <= task_list_length) {
@@ -239,15 +240,15 @@ commander
                     let task_text = task_data[0];
                     let task_priority = task_data[1];
                     let task_deadline = task_data[2];
-                    manager.update_task(id, task_text, task_priority, task_deadline);
+                    Manager.update_task(id, task_text, task_priority, task_deadline);
                 })
                 .catch((err) => console.log(err))
             } else {
-                manager.return_error('Invalid task id!');
+                Printer.return_error('Invalid task id!');
             }
         }).catch(err => {
             // Print error
-            manager.return_error(err);
+            Printer.return_error(err);
         })
     })
 
@@ -257,10 +258,10 @@ commander
     .alias('cl')
     .description('Clear the list with the name of the input list')
     .action((list_name, cmd) => {
-        if (manager.lists_names.test(list_name))
-            manager.clear_list(list_name)
+        if (Tokens.lists_names.test(list_name))
+            Manager.clear_list(list_name)
         else
-            manager.return_error('Invalid list name!')
+            Printer.return_error('Invalid list name!')
     })
 
 commander.parse(process.argv)  // Take array of string for parsing

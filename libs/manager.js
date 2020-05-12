@@ -1,6 +1,5 @@
 /* Task Manager Functions */
 
-const chalk = require('chalk');
 const Dataworker = require('./dataworker');
 const Tokens = require('./tokens');
 const Printer = require('./printer');
