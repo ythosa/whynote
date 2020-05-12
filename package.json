@@ -2,7 +2,7 @@
   "name": "whynote",
   "preferGlobal": true,
   "bin": {
-    "note": "app.js"
+    "note": "app/app.js"
   },
   "dependencies": {
     "chalk": "^4.0.0",
@@ -11,7 +11,7 @@
   },
   "description": "Command line interface, which implements a notepad task manager.",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "app/app.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Ythosa/whynote.git"
