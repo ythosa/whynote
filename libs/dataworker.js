@@ -20,7 +20,7 @@ class Dataworker {
             task_list = task_list.sort((t1, t2) => t1['date'] - t2['date'])
             task_list = task_list.sort((t1, t2) => t2['priority'] - t1['priority']);
             // Update data file
-            this.update_task_list(data_dir, task_list)
+            Dataworker.update_task_list(data_dir, task_list)
         }
 
         return task_list

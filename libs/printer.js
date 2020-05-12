@@ -23,34 +23,34 @@ class Printer {
         /* Return Error Template */
         let text = `   Error! ${e}`;
         console.log();
-        this.print_blank_line(text);
+        Printer.print_blank_line(text);
         console.log(chalk.redBright(text));
-        this.print_blank_line(text);
+        Printer.print_blank_line(text);
     }
 
     static return_warning(w) {
         /* Return Warning Template */
         let text = `    Warning! ${w}`;
         console.log();
-        this.print_blank_line(text);
+        Printer.print_blank_line(text);
         console.log(chalk.yellowBright(text));
-        this.print_blank_line(text);
+        Printer.print_blank_line(text);
     }
 
     static return_success() {
         /* Return Success of Operation */
         let text = `    Success! `;
         console.log();
-        this.print_blank_line(text);
+        Printer.print_blank_line(text);
         console.log(chalk.greenBright(text));
-        this.print_blank_line(text);
+        Printer.print_blank_line(text);
     }
 
     static print_note(id, task, color) {
         /* Print Task With Correct Selection */
         let {r, g, b} = Tokens.output_colors.primary;
         id++;
-        let id_str = this.id_num2str(id)
+        let id_str = Printer.id_num2str(id)
 
         if (color.bg != null)
             console.log(
@@ -105,10 +105,10 @@ class Printer {
             // Print mounth of group of tasks
             console.log(chalk.rgb(r, g, b)('· ') +
                 chalk.bgRgb(color.bg.r, color.bg.g, color.bg.b).rgb(color.text.r, color.text.g, color.text.b)
-                (` ${this.getMonthFromNumber(tlist[t_month].month)} `) + chalk.rgb(r, g, b)(':'))
+                (` ${Printer.getMonthFromNumber(tlist[t_month].month)} `) + chalk.rgb(r, g, b)(':'))
             for (let t_day in tlist[t_month].tasks) {
                 color = Tokens.output_colors.average;
-                let day_format_string = this.dayNumberToString(tlist[t_month].tasks[t_day].day)
+                let day_format_string = Printer.dayNumberToString(tlist[t_month].tasks[t_day].day)
                 // Print day of group of tasks
                 console.log(
                     chalk.rgb(r, g, b)(`·· `) +
@@ -118,7 +118,7 @@ class Printer {
                 );
                 // Print tasks for this day
                 tlist[t_month].tasks[t_day].tasks.forEach(task => {
-                    let id_str = this.id_num2str(id_t);
+                    let id_str = Printer.id_num2str(id_t);
                     if (task.deadline.hours == 23 && task.deadline.minutes == 59)
                         console.log(chalk.rgb(r, g, b)(`··· |${id_str}| ${task.text}`))
                     else

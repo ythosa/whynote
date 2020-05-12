@@ -11,7 +11,7 @@ class Classifier {
             task_list = await Dataworker.get_tasks(Tokens.data_file_dir)
         } catch(err) {
             Printer.return_error(err);
-            await this.get_groups_of_tasks();
+            await Classifier.get_groups_of_tasks();
         }
 
         let nlist = [];

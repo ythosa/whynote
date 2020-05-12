@@ -1,20 +1,20 @@
 const Dataworker = require('./dataworker');
 
-class Tokens {
+const Tokens = {
+    valid_priority_num: /^[1|2|3]$/,
+    valid_priority: /^[(inessential)|(average)|(important)]$/,
+    valid_deadline: /^(\d+)[-|\/|.](\d+)( (\d+)\:(\d{2}))?$/,
 
-    static valid_priority_num = /^[1|2|3]$/;
-    static valid_priority = /^[(inessential)|(average)|(important)]$/;
-    static valid_deadline = /^(\d+)[-|\/|.](\d+)( (\d+)\:(\d{2}))?$/;
+    valid_task_id_nums: /^\d+$/,
+    valid_task_id_interval: /^(\d+)-(\d+)$/,
 
-    static valid_task_id_nums = /^\d+$/;
-    static valid_task_id_interval = /^(\d+)-(\d+)$/;
-
-    static output_colors_name = [
+    output_colors_name: [
         'inessential',
         'average',
         'important',
-    ]
-    static output_colors = {
+    ],
+
+    output_colors: {
         important: {
             text: {r: 250, g: 250, b: 250},
             bg: {r: 141, g: 127, b: 210},
@@ -27,30 +27,30 @@ class Tokens {
             text: {r: 211, g: 201, b: 237},
             bg: null,
         },
-        primary: {r: 211, g: 201, b:237},
-    };
+        primary: {r: 211, g: 201, b: 237},
+    },
 
-    static data_file_dir = Dataworker.take_data_file_dir();
+    data_file_dir: Dataworker.take_data_file_dir(),
 
-    static max_list_length = 30;
+    max_list_length: 30,
 
-    static lists_names = /^(overdue-list)|(task-list)|(note-list)$/;
+    lists_names: /^(overdue-list)|(task-list)|(note-list)$/,
 
-    static validation_deadline(task_deadline) {
+    validation_deadline: (task_deadline) => {
         /* Checking whether the deadline is correct */
-        let is_deadline_correct = this.valid_deadline.test(task_deadline);
+        let is_deadline_correct = Tokens.valid_deadline.test(task_deadline);
         let reason_of_error;
 
         let date = new Date();
         let year, month, day, hours, minutes;
         if (is_deadline_correct) {
-            day = task_deadline.replace(this.valid_deadline, '$1');
+            day = task_deadline.replace(Tokens.valid_deadline, '$1');
             if (day <= 0 || day >= 32) {
                 is_deadline_correct = false;
                 reason_of_error = 'Ivalid deadline\'s day input!';
             }
 
-            month = task_deadline.replace(this.valid_deadline, '$2') - 1;
+            month = task_deadline.replace(Tokens.valid_deadline, '$2') - 1;
             if (month <= -1 || month >= 12) {
                 is_deadline_correct = false;
                 reason_of_error = 'Ivalid deadline\'s month input!';
@@ -58,14 +58,14 @@ class Tokens {
 
             year = date.getUTCFullYear();
 
-            hours = task_deadline.replace(this.valid_deadline, '$4');
+            hours = task_deadline.replace(Tokens.valid_deadline, '$4');
             if (hours == '') hours = null;
             if (hours != null && (hours <= -1 || hours >= 23)) {
                 is_deadline_correct = false;
                 reason_of_error = 'Ivalid deadline\'s hours input!';
             }
 
-            minutes = task_deadline.replace(this.valid_deadline, '$5');
+            minutes = task_deadline.replace(Tokens.valid_deadline, '$5');
             if (minutes == '') minutes = null;
             if (minutes != null && (minutes <= -1 || minutes >= 60)) {
                 is_deadline_correct = false;
@@ -83,7 +83,6 @@ class Tokens {
         }
         return [is_deadline_correct, year, month, day, hours, minutes, reason_of_error]
     }
-
 }
 
 module.exports = Tokens;

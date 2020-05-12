@@ -88,11 +88,11 @@ class Manager {
                     while (id_n < tasks_nottime.length) {
                         // Choosing note's formatting by priority
                         let task_priority = tasks_nottime[id_n]['priority'];
-                        if (task_priority === 3)
+                        if (task_priority == 3)
                             Printer.print_note(id_t + id_n - 1, tasks_nottime[id_n].text, Tokens.output_colors['important'])
-                        else if (task_priority === 2)
+                        else if (task_priority == 2)
                             Printer.print_note(id_t + id_n - 1, tasks_nottime[id_n].text, Tokens.output_colors['average'])
-                        else if (task_priority === 1)
+                        else if (task_priority == 1)
                             Printer.print_note(id_t + id_n - 1, tasks_nottime[id_n].text, Tokens.output_colors['inessential'])
                         id_n++;
                     }
