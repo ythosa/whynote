@@ -13,7 +13,7 @@
 const commander = require('commander');
 const {prompt} = require('inquirer');
 const Manager = require('./libs/manager');
-const dataworker = require('./libs/work_with_data');
+const dataworker = require('./libs/dataworker');
 
 // Set commander version and description
 // note --version|-V
@@ -150,7 +150,7 @@ commander
 
                     // Extraction task text and priority
                     let task_data = [];
-                    for (prop in options) {
+                    for (let prop in options) {
                         task_data.push(options[prop]);
                     }
                     let task_text = task_data[0];
