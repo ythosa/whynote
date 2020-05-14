@@ -1,13 +1,133 @@
 [
    {
+      "priority": 1,
+      "text": "Literature",
+      "date": 1589301648942,
+      "deadline": {
+         "year": 2020,
+         "month": 4,
+         "day": "13",
+         "hours": 23,
+         "minutes": 59
+      }
+   },
+   {
+      "priority": 1,
+      "text": "Update docs for winlock server",
+      "date": 1589401243994,
+      "deadline": {
+         "year": 2020,
+         "month": 4,
+         "day": "14",
+         "hours": 23,
+         "minutes": 59
+      }
+   },
+   {
+      "priority": 1,
+      "text": "Presentation + virustotal",
+      "date": 1589345732058,
+      "deadline": {
+         "year": 2020,
+         "month": 4,
+         "day": "14",
+         "hours": 23,
+         "minutes": 59
+      }
+   },
+   {
+      "priority": 1,
+      "text": "Literature",
+      "date": 1589369576566,
+      "deadline": {
+         "year": 2020,
+         "month": 4,
+         "day": "18",
+         "hours": 23,
+         "minutes": 59
+      }
+   },
+   {
+      "priority": 1,
+      "text": "Russian",
+      "date": 1589429045733,
+      "deadline": {
+         "year": 2020,
+         "month": 4,
+         "day": "20",
+         "hours": 23,
+         "minutes": 59
+      }
+   },
+   {
+      "priority": 1,
+      "text": "Chemistry",
+      "date": 1589369607831,
+      "deadline": {
+         "year": 2020,
+         "month": 4,
+         "day": "20",
+         "hours": 23,
+         "minutes": 59
+      }
+   },
+   {
+      "priority": 1,
+      "text": "Geography",
+      "date": 1589373880305,
+      "deadline": {
+         "year": 2020,
+         "month": 4,
+         "day": "20",
+         "hours": 23,
+         "minutes": 59
+      }
+   },
+   {
+      "priority": 1,
+      "text": "Biology",
+      "date": 1589473279432,
+      "deadline": {
+         "year": 2020,
+         "month": 4,
+         "day": "20",
+         "hours": 23,
+         "minutes": 59
+      }
+   },
+   {
       "priority": "3",
       "text": "Programming! Programming! Programming!",
       "date": 1589121176795,
       "deadline": null
    },
    {
+      "priority": "3",
+      "text": "Make presentation MarGU",
+      "date": 1589301672516,
+      "deadline": null
+   },
+   {
       "priority": "2",
       "text": "Learning SQL",
+      "date": 1589136416247,
+      "deadline": null
+   },
+   {
+      "priority": "2",
+      "text": "Learning Docker",
+      "date": 1589136416247,
+      "deadline": null
+   },
+   {
+      "priority": "2",
+      "text": "Rewrite documentation winlock-server",
+      "date": 1589374021123,
+      "deadline": null
+   },
+   {
+      "priority": "1",
+      "text": "Websocket chat on Go and front-end on React",
       "date": 1589136416247,
       "deadline": null
    }

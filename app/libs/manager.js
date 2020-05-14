@@ -44,18 +44,17 @@ class Manager {
                 valid_tasks = tasks_bytime.valid_tasks;
 
                 // Print overdue task list
-                if (to_print == 'overdue' || to_print == 'tasks')
-                    if (overdue_tasks.to_print.length) {
-                        let label = `   ~-~Overdue Task List~-~`
-                        console.log();
-                        Printer.print_blank_line(label);
-                        console.log(label);
-                        Printer.print_blank_line(label);
-                        id_t = Printer.print_task_list(overdue_tasks.to_print, id_t)
-                        Printer.print_blank_line(label)
-                    } else
-                        if (to_print == 'overdue')
-                            Printer.return_warning('Overdue task list is empty.')
+                if (overdue_tasks.to_print.length) {
+                    let label = `   ~-~Overdue Task List~-~`
+                    console.log();
+                    Printer.print_blank_line(label);
+                    console.log(label);
+                    Printer.print_blank_line(label);
+                    id_t = Printer.print_task_list(overdue_tasks.to_print, id_t)
+                    Printer.print_blank_line(label)
+                } else
+                    if (to_print == 'overdue')
+                        Printer.return_warning('Overdue task list is empty.')
 
                 // Print valid task list
                 if (to_print != 'overdue')
