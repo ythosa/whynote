@@ -282,26 +282,33 @@ class Manager {
     static async clear_list(list_name) {
         /* Clear list of tasks with <list_name> */
 
-        let {'overdue_list': olist, 'task_list': tlist, 'note_list': nlist} = await Classifier.get_groups_of_tasks();
-        let list;
-        if (list_name === 'overdue-list')
-            list = [
-                ...tlist,
-                ...nlist
-            ]
-        else if (list_name === 'task-list')
-            list = [
-                ...olist,
-                ...nlist
-            ]
-        else if (list_name === 'note-list')
-            list = [
-                ...olist,
-                ...tlist
-            ]
-        Dataworker.update_task_list(Tokens.data_file_dir, list);
+        if (list_name === 'all') {
+            // Remove all tasks
+            Dataworker.update_task_list(Tokens.data_file_dir, [])
 
-        Printer.return_success()
+            Printer.return_success()
+        } else {
+            let {'overdue_list': olist, 'task_list': tlist, 'note_list': nlist} = await Classifier.get_groups_of_tasks()
+            let list;
+            if (list_name === 'overdue-list')
+                list = [
+                    ...tlist,
+                    ...nlist
+                ]
+            else if (list_name === 'task-list')
+                list = [
+                    ...olist,
+                    ...nlist
+                ]
+            else if (list_name === 'note-list')
+                list = [
+                    ...olist,
+                    ...tlist
+                ]
+            Dataworker.update_task_list(Tokens.data_file_dir, list)
+
+            Printer.return_success()
+        }
     }
 
 }

@@ -34,7 +34,7 @@ const Tokens = {
 
     max_list_length: 30,
 
-    lists_names: /^(overdue-list)|(task-list)|(note-list)$/,
+    lists_names: /^(overdue-list)|(task-list)|(note-list)|(all)$/,
 
     validation_deadline: (task_deadline) => {
         /* Checking whether the deadline is correct */
