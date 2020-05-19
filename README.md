@@ -88,6 +88,7 @@
           * overdue-list  -  to clear overdue task list,
           * task-list  -  to clear task list,
           * note-list  -  to clear note-list
+          * all  -  to clear all lists (== remove all func)
        *  `--help|h`.
    
 <br>
