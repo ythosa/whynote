@@ -5,7 +5,7 @@ const Tokens = {
     valid_priority: /^[(inessential)|(average)|(important)]$/,
     valid_deadline: /^(\d+)[-|\/|.](\d+)( (\d+)\:(\d{2}))?$/,
 
-    valid_task_id_nums: /^\d+$/,
+    valid_task_id_nums: /^(\d+,?)+$/,
     valid_task_id_interval: /^(\d+)-(\d+)$/,
 
     output_colors_name: [
@@ -82,7 +82,7 @@ const Tokens = {
             reason_of_error = `The deadline must be 'DD.MM' or 'DD.MM mm:hh'!`;
         }
         return [is_deadline_correct, year, month, day, hours, minutes, reason_of_error]
-    }
+    },
 }
 
 module.exports = Tokens;

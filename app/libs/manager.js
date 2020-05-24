@@ -73,9 +73,10 @@ class Manager {
             // Output tasks without deadline
             if (to_print == 'notes' || to_print == null) {
                 // Sorting note list by priority
-                tasks_nottime = tasks_nottime.sort((t1, t2) => {
-                    return t1.priority < t2.priority
+                tasks_nottime.sort(({priority: p1}, {priority: p2}) => {
+                    return p1 < p2
                 })
+
                 // Output note list
                 if (tasks_nottime.length) {
                     let label = `   ~-~Note List~-~`
@@ -241,13 +242,28 @@ class Manager {
 
                 Printer.return_success();
             } else if (Tokens.valid_task_id_nums.exec(id)) {
-                // Remove task with `id`
-                id--;
-                if (id >= 0 && id < task_list.length) {
-                    task_list = [
-                        ...task_list.slice(0, id),
-                        ...task_list.slice(++id)
-                    ]
+
+                let ids = id.split(',')
+                ids = ids.map((el) => {
+                    el = Number(el)
+                    return --el
+                }).sort((a, b) => a - b)
+
+                if (ids[0] >= 0 && ids[ids.length-1] < task_list.length) {
+                    const remove_task = (id, task_list) => {
+                        // Remove task with `id`
+                        return [
+                            ...task_list.slice(0, id),
+                            ...task_list.slice(++id)
+                        ]
+                    }
+
+                    for (let i = 0; i < ids.length; i++) {
+                        task_list = remove_task(ids[i], task_list)
+
+                        ids = ids.map((i) => --i)
+                    }
+
                     Dataworker.update_task_list(Tokens.data_file_dir, task_list);
 
                     Printer.return_success();
