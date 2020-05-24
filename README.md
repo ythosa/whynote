@@ -71,6 +71,7 @@
        *  Id can be:
           * `all`, by this way you can remove all tasks from task list,
           *  `<id>` number of task number in task list,
+          *  `<id1, id2, id3, ...>`
           *  `start-end` - using this syntax you can delete tasks from id peer `start` to id peer `end`;
        *  `--help|h`  -  get info about this method.
        
