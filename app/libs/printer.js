@@ -58,10 +58,30 @@ class Printer {
             console.log(chalk.rgb(r, g, b)(`The most similar command is: `))
 
         for (let c of cmds) {
-            console.log(`\t ${c.command} ( ${c.alias} )`)
+            console.log(chalk.rgb(r, g, b)(`\t ${c.command} ( ${c.alias} )`))
         }
 
         console.log()
+    }
+
+    static print_current_date() {
+        /* Print Current Date for User */
+
+        console.log()
+
+        const { r: rt, g: gt, b: bt } = Tokens.output_colors.important.text
+        const { r: rbg, g: gbg, b: bbg } = Tokens.output_colors.important.bg
+
+        const date = new Date()
+        const day = Printer.dayNumberToString(date.getDate())
+        const month = Printer.getMonthFromNumber(date.getMonth())
+
+        console.log(
+            '   ~',
+            chalk.bgRgb(rbg, gbg, bbg).rgb(rt, gt, bt)(
+                `Today is ${day} of ${month}`
+            ),
+            '~   ')
     }
 
     static print_note(id, task, color) {

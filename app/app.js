@@ -54,6 +54,9 @@ commander
     Dataworker.get_tasks(Tokens.data_file_dir).then(task_list => {
         let task_list_length = task_list.length;
 
+        Printer.print_current_date()
+        console.log()
+
         let to_prompt = [
             {
                 type: 'input',

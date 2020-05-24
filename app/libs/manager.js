@@ -8,6 +8,8 @@ const Classifier = require('./classifier');
 class Manager {
 
     static print_similar_command(argv) {
+        /* Print similar commands */
+
         let cmds = Tokens.cli_commands
         let cmds_threshold = []
         for (let c in cmds) {
@@ -18,7 +20,6 @@ class Manager {
                 ]
             )
         }
-
 
         let min_id = {
             command: 0,
@@ -61,6 +62,7 @@ class Manager {
 
     static add_task(task) {
         /* Adding Task to Data File */
+
         Dataworker.add_task(Tokens.data_file_dir, task);
 
         Printer.return_success();
@@ -90,6 +92,9 @@ class Manager {
             let overdue_tasks = null, valid_tasks = null;
             // Output tasks with deadline
             if (to_print == 'tasks' || to_print == 'overdue' || to_print == null) {
+
+                Printer.print_current_date()
+
                 tasks_bytime = Classifier.sorting_tasks_with_dl(tasks_bytime);
                 tasks_bytime = Classifier.classification_task_list(tasks_bytime);
                 overdue_tasks = tasks_bytime.overdue_tasks;
@@ -210,6 +215,9 @@ class Manager {
 
     static update_task(id, task_text, task_priority, task_deadline) {
         /* Updating Task with Id */
+
+        Printer.print_current_date()
+
         Dataworker.get_tasks(Tokens.data_file_dir, 'last').then(task_list => {
             id--;
 
