@@ -46,6 +46,24 @@ class Printer {
         Printer.print_blank_line(text);
     }
 
+    static print_similar_commands(cmds) {
+        /* Print Similar CLI Commands */
+        console.log()
+
+        const { r, g, b } = Tokens.output_colors.inessential.text
+
+        if (cmds.length > 1)
+            console.log(chalk.rgb(r, g, b)(`The most similar commands are: `))
+        else
+            console.log(chalk.rgb(r, g, b)(`The most similar command is: `))
+
+        for (let c of cmds) {
+            console.log(`\t ${c.command} ( ${c.alias} )`)
+        }
+
+        console.log()
+    }
+
     static print_note(id, task, color) {
         /* Print Task With Correct Selection */
         let {r, g, b} = Tokens.output_colors.primary;

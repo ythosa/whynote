@@ -264,4 +264,14 @@ commander
             Printer.return_error('Invalid list name!')
     })
 
-commander.parse(process.argv)  // Take array of string for parsing
+commander.program.exitOverride();
+
+try {
+    commander.parse(process.argv)  // Take array of string for parsing
+} catch {
+    // Find similar funcs
+    const cmnd = process.argv[2]
+
+    if (cmnd !== 'help')
+        Manager.print_similar_command(cmnd)
+}

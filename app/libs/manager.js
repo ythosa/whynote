@@ -7,6 +7,58 @@ const Classifier = require('./classifier');
 
 class Manager {
 
+    static print_similar_command(argv) {
+        let cmds = Tokens.cli_commands
+        let cmds_threshold = []
+        for (let c in cmds) {
+            cmds_threshold.push(
+                [
+                    Tokens.levenshteinDistance(argv, cmds[c][0]),
+                    Tokens.levenshteinDistance(argv, cmds[c][1]),
+                ]
+            )
+        }
+
+
+        let min_id = {
+            command: 0,
+            alias: 0
+        }
+        for (let c in cmds_threshold) {
+            if (cmds_threshold[c][0] < cmds_threshold[min_id.command][min_id.alias])
+                min_id = {
+                    command: c,
+                    alias: 0
+                }
+            if (cmds_threshold[c][1] < cmds_threshold[min_id.command][min_id.alias])
+                min_id = {
+                    command: c,
+                    alias: 1
+                }
+        }
+
+        const similar_commands = []
+        for (let c in cmds_threshold) {
+            if (cmds_threshold[c][0] === cmds_threshold[min_id.command][min_id.alias])
+                similar_commands.push(
+                    {
+                        command: cmds[c][0],
+                        alias: cmds[c][1]
+                    }
+                )
+            if (cmds_threshold[c][1] === cmds_threshold[min_id.command][min_id.alias])
+                similar_commands.push(
+                    {
+                        command: cmds[c][0],
+                        alias: cmds[c][1]
+                    }
+                )
+        }
+
+
+        Printer.print_similar_commands(similar_commands)
+    }
+
     static add_task(task) {
         /* Adding Task to Data File */
         Dataworker.add_task(Tokens.data_file_dir, task);
