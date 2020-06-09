@@ -11,13 +11,12 @@
 
     /* Importing dependencies */
 const commander = require('commander');
-const {prompt} = require('inquirer');
+const { prompt } = require('inquirer');
 
 const Manager = require('./libs/manager');
 const Dataworker = require('./libs/dataworker');
 const Printer = require('./libs/printer');
 const Tokens = require('./libs/tokens');
-const Classifier = require('./libs/classifier');
 
 // Set commander version and description
 // note --version|-V
@@ -193,7 +192,7 @@ commander
     .command('remove <id>')
     .alias('rv')
     .description('Remove complete or not actual task from task list with <id>.')
-    .action((id, cmd) => {
+    .action((id) => {
         // Remove task with <id>
         prompt([
             {
@@ -212,7 +211,7 @@ commander
     .command('modific <id>')
     .alias('mod')
     .description('Modification task: text and priority with <id>.')
-    .action((id, cmd) => {
+    .action((id) => {
         Dataworker.get_tasks(Tokens.data_file_dir).then(task_list => {
             let task_list_length = task_list.length;
 
@@ -262,7 +261,7 @@ commander
     .description('Clear the list with the name of the input list')
     .action((list_name, cmd) => {
         if (Tokens.lists_names.test(list_name))
-            Manager.clear_list(list_name)
+            Manager.clear_list(list_name).then(r => {})
         else
             Printer.return_error('Invalid list name!')
     })
@@ -272,9 +271,11 @@ commander.program.exitOverride();
 try {
     commander.parse(process.argv)  // Take array of string for parsing
 } catch {
-    // Find similar funcs
-    const cmnd = process.argv[2]
+    // Find similar functions
+    const command = process.argv[2]
 
-    if (cmnd !== 'help')
-        Manager.print_similar_command(cmnd)
+    const to_skip_commands = ['help', '--help', '-h', '--version', '-V']
+
+    if (!to_skip_commands.includes(command))
+        Manager.print_similar_command(command)
 }

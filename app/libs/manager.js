@@ -15,8 +15,8 @@ class Manager {
         for (let c in cmds) {
             cmds_threshold.push(
                 [
-                    Tokens.levenshteinDistance(argv, cmds[c][0]),
-                    Tokens.levenshteinDistance(argv, cmds[c][1]),
+                    Tokens.levenshtein_distance(argv, cmds[c][0]),
+                    Tokens.levenshtein_distance(argv, cmds[c][1]),
                 ]
             )
         }
