@@ -103,5 +103,5 @@ dist
 # TernJS port file
 .tern-port
 
-# Data
-app/data/data_file.json
+.idea/
+.vscode/
