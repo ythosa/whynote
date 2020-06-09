@@ -2,15 +2,15 @@
 
 <div align="center">
   
-  <img src="https://github.com/Ythosa/whynote/blob/master/docs_res/whynote.png">
+  <img src="https://github.com/Ythosa/whynote/blob/master/assets/whynote.png">
   
   <br>
   
   <br>
 
-  [![Badge](https://img.shields.io/badge/Uses-Node.js-green.svg?style=flat-square)](1)
-  [![Badge](https://img.shields.io/badge/Open-Source-important.svg?style=flat-square)](1)
-  [![Badge](https://img.shields.io/badge/Made_with-Love-ff69b4.svg?style=flat-square)](1)
+  [![Badge](https://img.shields.io/badge/Uses-Node.js-green.svg?style=flat-square)](Node.js)
+  [![Badge](https://img.shields.io/badge/Open-Source-important.svg?style=flat-square)](OpenSource)
+  [![Badge](https://img.shields.io/badge/Made_with-Love-ff69b4.svg?style=flat-square)](MadeWithLove)
 
   <br>
 
@@ -96,8 +96,22 @@
 
   <div align = "center"> 
     <h2> :.Using Example.: </h2>
-    <img src="https://github.com/Ythosa/whynote/blob/master/docs_res/using_example.gif">
+    <img src="https://github.com/Ythosa/whynote/blob/master/assets/using_example.gif">
   
-   #### More you can see in `docs_res` folder of this repository.
-   <i>  T h a n k s  </i> /// <i>  f o r  </i> /// <i>  w a t c h i n g  </i>!
+   #### More you can see in `assets` folder of this repository.
   </div>
+
+<br>
+
+## FAQ
+*Q*: How can I get help on some command?  
+*A*: You can use command flag `--help|-h`, for example: `wis goto --help`
+
+*Q*: How can I help to develop this project?  
+*A*: You can put a :star: :3
+
+<br>
+
+<div align="center">
+  Copyright 2020 Ythosa
+</div>
