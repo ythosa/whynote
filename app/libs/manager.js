@@ -130,8 +130,8 @@ class Manager {
             // Output tasks without deadline
             if (to_print == 'notes' || to_print == null) {
                 // Sorting note list by priority
-                tasks_nottime.sort(({priority: p1}, {priority: p2}) => {
-                    return p1 < p2
+                tasks_nottime = tasks_nottime.sort((a, b) => {
+                    return b.priority - a.priority
                 })
 
                 // Output note list
