@@ -216,8 +216,6 @@ class Manager {
     static update_task(id, task_text, task_priority, task_deadline) {
         /* Updating Task with Id */
 
-        Printer.print_current_date()
-
         Dataworker.get_tasks(Tokens.data_file_dir, 'last').then(task_list => {
             id--;
 
@@ -225,7 +223,7 @@ class Manager {
                 if (task_deadline !== '-') {
                     let [
                         is_deadline_correct, year, month, day, hours, minutes, reason_of_error
-                    ] = Tokens.validation_deadline(task_deadline)
+                    ] = Tokens.validation_deadline(task_deadline);
 
                     if (is_deadline_correct) {
                         task_deadline = {
@@ -284,7 +282,7 @@ class Manager {
                     }
                 }
             } else {
-                Printer.return_error('Ivalid priority input!')
+                Printer.return_error('Invalid priority input!')
             }
         }).catch(err => {
             // Try again
@@ -295,6 +293,7 @@ class Manager {
 
     static remove_task(id) {
         /* Removing Task with Id */
+
         Dataworker.get_tasks(Tokens.data_file_dir, 'last').then(task_list => {
             if (id === 'all') {
                 // Remove all tasks

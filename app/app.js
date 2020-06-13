@@ -216,6 +216,10 @@ commander
             let task_list_length = task_list.length;
 
             if (id >= 1 && id <= task_list_length) {
+
+                Printer.print_current_date();
+                console.log();
+
                 let to_prompt = [
                     {
                         type: 'input',

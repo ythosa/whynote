@@ -66,7 +66,6 @@ class Printer {
 
     static print_current_date() {
         /* Print Current Date for User */
-
         console.log()
 
         const { r: rt, g: gt, b: bt } = Tokens.output_colors.important.text
