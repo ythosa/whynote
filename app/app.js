@@ -276,6 +276,6 @@ try {
 
     const to_skip_commands = ['help', '--help', '-h', '--version', '-V']
 
-    if (!to_skip_commands.includes(command))
+    if (command && !to_skip_commands.includes(command))
         Manager.print_similar_command(command)
 }
