@@ -7,7 +7,7 @@
   "dependencies": {
     "chalk": "^4.0.0",
     "commander": "^5.0.0",
-    "inquirer": "^7.1.0"
+    "inquirer": "^13.2.1"
   },
   "description": "Command line interface, which implements a notepad task manager.",
   "version": "1.0.0",
